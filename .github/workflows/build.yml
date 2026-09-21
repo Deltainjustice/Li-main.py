@@ -40,5 +40,5 @@ jobs:
     - name: Upload generated APK
       uses: actions/upload-artifact@v4
       with:
-        name: matrix-performers-apk
+        name: lilit-station-apk     
         path: bin/*.apk
