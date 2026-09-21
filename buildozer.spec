@@ -7,7 +7,7 @@ source.dir = .
 source.include_exts = py,json,txt
 
 version = 1.0
-requirements = python3
+requirements = python3,kivy
 orientation = portrait
 android.permissions = INTERNET
 
