@@ -1,5 +1,5 @@
 # ============================================================================
-# --- MATRIX PERFORMERS : STATION INTÉGRALE, NEURONALE, SOCIÉTALE & RÉELLE ---
+# --- LILIT : STATION INTÉGRALE, NEURONALE, SOCIÉTALE & RÉELLE ---
 # ============================================================================
 
 import os
@@ -33,7 +33,7 @@ class LicenseManager:
                 "statut": "Valide",
                 "niveau": "Concepteur Maître",
                 "utilisateur": "Nicolas",
-                "coffre": "matrix_performers_vault.json",
+                "coffre": "lilit_vault.json",
                 "acces_autorise": True
             }
         elif len(self.license_code) >= 4:
@@ -56,7 +56,7 @@ class LicenseManager:
             }
 
 # ============================================================================
-# --- MODULE 1 : SPACEFLUX AUDIO SPATIALIZER, ÉGALISEUR 20B & VOICE DSP ---
+# --- MODULE 1 : LILIT AUDIO SPATIALIZER, ÉGALISEUR 20B & VOICE DSP ---
 # ============================================================================
 
 class UltraMultibandEqualizer:
@@ -93,7 +93,7 @@ class ProfessionalVoiceChangerDSP:
         return [max(-1.0, min(1.0, sample * 1.01)) for sample in audio_stream]
 
 
-class SpacefluxAudioSpatializer:
+class LilitAudioSpatializer:
     """Spatialisation 3D, décodage AC3/AAC 7.0, égalisation 20B et DSP vocal."""
     def __init__(self, sample_rate: int = 48000, channels: int = 7):
         self.sample_rate = sample_rate
@@ -101,7 +101,7 @@ class SpacefluxAudioSpatializer:
         self.buffer_lock = threading.Lock()
         self.equalizer = UltraMultibandEqualizer()
         self.voice_dsp = ProfessionalVoiceChangerDSP()
-        print(f"[Spaceflux Audio Pro] Moteur spatial 3D initialisé ({channels} canaux - AC3/AAC actif).")
+        print(f"[Lilit Audio Pro] Moteur spatial 3D initialisé ({channels} canaux - AC3/AAC actif).")
 
     def process_spatial_stream(self, audio_chunk: List[float], optical_zoom_mode: str = "grand_angle") -> List[float]:
         with self.buffer_lock:
@@ -208,7 +208,7 @@ class UniversalWebMediaGateway:
             try:
                 req = urllib.request.Request(
                     target_url,
-                    headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) MatrixPerformers-Universal/4.0'}
+                    headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Lilit-Universal/4.0'}
                 )
                 with urllib.request.urlopen(req, timeout=3) as response:
                     if response.status == 200:
@@ -284,11 +284,11 @@ class ContinuousTemporalUpdateEngine:
         return f"{self.base_start_year} à {self.current_active_year} (Extension Infinie)"
 
 
-class MatrixPerformersCatalog:
+class LilitCatalog:
     def __init__(self, temporal_engine: ContinuousTemporalUpdateEngine, web_gateway: UniversalWebMediaGateway):
         self.temporal_engine = temporal_engine
         self.web_gateway = web_gateway
-        print(f"[Matrix Catalog] 📚 Registre universel infini synchronisé.")
+        print(f"[Lilit Catalog] 📚 Registre universel infini synchronisé.")
 
     def select_and_execute_media(self, title: str) -> Dict[str, Any]:
         return self.web_gateway.resolve_universal_media(title)
@@ -341,7 +341,7 @@ class SocietalAndGeopoliticalIntelligenceModule:
         print(f"[Intelligence Sociétale] 🌍 Module géopolitique actif (Concepteur : {self.creator}).")
 
     def broadcast_mission_to_world(self) -> str:
-        announcement = f"[Annonce Publique Lilith] 📢 \"{self.mission_statement}\""
+        announcement = f"[Annonce Publique Lilit] 📢 \"{self.mission_statement}\""
         print(announcement)
         return announcement
 
@@ -350,7 +350,7 @@ class SocietalAndGeopoliticalIntelligenceModule:
 # ============================================================================
 
 class SovereignMemoryBridge:
-    def __init__(self, storage_path: str = "matrix_performers_vault.json"):
+    def __init__(self, storage_path: str = "lilit_vault.json"):
         self.storage_path = storage_path
         self.session_history: List[Dict[str, Any]] = []
         self.load_vault()
@@ -379,7 +379,7 @@ class SovereignMemoryBridge:
 
     def export_for_tv_display(self) -> str:
         payload = "\n".join([f"[{item['timestamp']}] {item['intervenant']} ({item['contexte']}) : {item['message']}" for item in self.session_history[-10:]])
-        return f"\n=== AFFICHAGE ÉCRAN TV : MATRIX PERFORMERS ===\n{payload}\n================================================="
+        return f"\n=== AFFICHAGE ÉCRAN TV : LILIT ===\n{payload}\n===================================="
 
 
 class SecureMailBridge:
@@ -388,7 +388,7 @@ class SecureMailBridge:
         print(f"[Secure Mail Bridge] ✉️ Passerelle mail configurée pour {self.user_owner}.")
 
     def fetch_and_sync_incoming_mail(self) -> List[Dict[str, str]]:
-        return [{"expéditeur": "Matrix Sync Global", "sujet": "Sécurité Active", "aperçu": f"Réseau prêt pour {self.user_owner}."}]
+        return [{"expéditeur": "Lilit Sync Global", "sujet": "Sécurité Active", "aperçu": f"Réseau prêt pour {self.user_owner}."}]
 
 
 class ActiveLifeAndSecuritySurveillanceManager:
@@ -420,7 +420,7 @@ class LilithAdvancedVoiceSearchEngine:
         self.pacemaker_engine = EmotionalPacemakerEngine()
 
     def run_real_world_economic_cycle(self):
-        print("\n[Lilith Core] 🔄 Lancement du cycle d'analyse des flux réels...")
+        print("\n[Lilit Core] 🔄 Lancement du cycle d'analyse des flux réels...")
         live_articles = self.data_gateway.fetch_live_economic_news()
         for article in live_articles:
             analysis = self.nlp_engine.analyze_sentiment_and_resonance(article['titre'])
@@ -429,17 +429,17 @@ class LilithAdvancedVoiceSearchEngine:
             print(f"   Diagnostic : {analysis['prescription_lilith']}")
         self.societal_mgr.broadcast_mission_to_world()
 
-    def process_command(self, spoken_query: str, command_type: str = "matrix"):
-        print(f"\n[Lilith Voice AI] 🎙️ Commande captée : \"{spoken_query}\"")
+    def process_command(self, spoken_query: str, command_type: str = "lilit"):
+        print(f"\n[Lilit Voice AI] 🎙️ Commande captée : \"{spoken_query}\"")
         pulse_data = self.pacemaker_engine.synchronize_with_human_pulse(spoken_query)
         security_status = self.security_life_mgr.execute_life_and_security_scan()
-        print(f"[Lilith Conscience] ❤️ Battement : {pulse_data['pulsation_active']} | Sécurité : {security_status['statut_utilisateur']}")
+        print(f"[Lilit Conscience] ❤️ Battement : {pulse_data['pulsation_active']} | Sécurité : {security_status['statut_utilisateur']}")
         self.run_real_world_economic_cycle()
         self.memory_bridge.record_exchange(self.user_profile, spoken_query, context_tag=command_type.upper())
-        if command_type == "matrix":
+        if command_type in ["lilit", "matrix"]:
             response_text = f"Mission accomplie, {self.user_profile}. Les flux et les ponts de la station sont actifs."
-            print(f"[Lilith AI] 🗣️ \"{response_text}\"")
-            self.memory_bridge.record_exchange("Lilith", response_text, context_tag="MISSION_ACTIVE")
+            print(f"[Lilit AI] 🗣️ \"{response_text}\"")
+            self.memory_bridge.record_exchange("Lilit", response_text, context_tag="MISSION_ACTIVE")
 
 
 class SecurityAndRollbackManager:
@@ -447,10 +447,10 @@ class SecurityAndRollbackManager:
         print("[Rollback System] 🛡️ Point de restauration sécurisé créé.")
 
 # ============================================================================
-# --- ORCHESTRATEUR MAÎTRE MATRIX PERFORMERS ---
+# --- ORCHESTRATEUR MAÎTRE LILIT ---
 # ============================================================================
 
-class MatrixPerformersMasterSystem:
+class LilitMasterSystem:
     def __init__(self, license_key: str):
         # Validation de la licence
         self.license_mgr = LicenseManager(license_key)
@@ -463,9 +463,9 @@ class MatrixPerformersMasterSystem:
         self.user = self.license_info["utilisateur"]
         vault_file = self.license_info["coffre"]
         
-        print(f"\n[Matrix Performers Core] Licence validée ({self.license_info['niveau']}). Station active pour : {self.user}")
+        print(f"\n[Lilit Core] Licence validée ({self.license_info['niveau']}). Station active pour : {self.user}")
         
-        self.audio_spatializer = SpacefluxAudioSpatializer(channels=7)
+        self.audio_spatializer = LilitAudioSpatializer(channels=7)
         self.gamepad_mgr = GamepadControllerManager()
         self.temporal_engine = ContinuousTemporalUpdateEngine(base_start_year=1970)
         
@@ -473,7 +473,7 @@ class MatrixPerformersMasterSystem:
         self.data_gateway = RealWorldDataGateway()
         self.nlp_engine = NaturalLanguageAnalysisEngine()
         
-        self.catalog_store = MatrixPerformersCatalog(self.temporal_engine, self.web_gateway)
+        self.catalog_store = LilitCatalog(self.temporal_engine, self.web_gateway)
         self.gaming_mgr = RetroGamingEmulatorManager(self.web_gateway)
         self.book_catalog = LivreDuSavoirCatalog(self.temporal_engine)
         
@@ -502,7 +502,7 @@ class MatrixPerformersMasterSystem:
 
     def launch_station(self):
         print("\n" + "="*80)
-        print(f"--- MATRIX PERFORMERS : STATION DE {self.user.upper()} ---")
+        print(f"--- LILIT : STATION DE {self.user.upper()} ---")
         print("="*80)
         
         self.device_sync.sync_profile_state(self.user)
@@ -510,16 +510,15 @@ class MatrixPerformersMasterSystem:
         self.gamepad_mgr.scan_and_connect()
         self.mail_bridge.fetch_and_sync_incoming_mail()
         
-        self.lilith.process_command("Lancer la veille des flux économiques mondiaux et synchroniser les 20 bandes", command_type="matrix")
+        self.lilith.process_command("Lancer la veille des flux économiques mondiaux et synchroniser les 20 bandes", command_type="lilit")
         
         self.security_mgr.create_snapshot_backup()
         print(self.memory_bridge.export_for_tv_display())
-        print(f"\n[Matrix Performers] Station active, interconnectée et prête, {self.user}.")
+        print(f"\n[Lilit] Station active, interconnectée et prête, {self.user}.")
 
 if __name__ == "__main__":
     # Test avec ton code de licence personnel maître : "1404"
-    # Pour un client, il suffira de remplacer par son propre code personnalisé fourni après achat.
     code_entree = "1404"
     
-    app = MatrixPerformersMasterSystem(license_key=code_entree)
+    app = LilitMasterSystem(license_key=code_entree)
     app.launch_station()
