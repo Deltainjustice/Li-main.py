@@ -18,6 +18,17 @@ from datetime import datetime
 from typing import List, Dict, Optional, Any
 
 # ============================================================================
+# --- IMPORTATIONS KIVY (Interface Graphique Android) ---
+# ============================================================================
+import kivy
+kivy.require('2.1.0')
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.button import Button
+from kivy.clock import Clock
+
+# ============================================================================
 # --- MODULE 0 : GESTIONNAIRE DE LICENCES & SÉCURITÉ CLIENTS ---
 # ============================================================================
 
@@ -341,7 +352,7 @@ class SocietalAndGeopoliticalIntelligenceModule:
         print(f"[Intelligence Sociétale] 🌍 Module géopolitique actif (Concepteur : {self.creator}).")
 
     def broadcast_mission_to_world(self) -> str:
-        announcement = f"[Annonce Publique Lilit] 📢 \"{self.mission_statement}\""
+        announcement = f"[Annonce Publique Lilith] 📢 \"{self.mission_statement}\""
         print(announcement)
         return announcement
 
@@ -379,7 +390,7 @@ class SovereignMemoryBridge:
 
     def export_for_tv_display(self) -> str:
         payload = "\n".join([f"[{item['timestamp']}] {item['intervenant']} ({item['contexte']}) : {item['message']}" for item in self.session_history[-10:]])
-        return f"\n=== AFFICHAGE ÉCRAN TV : LILIT ===\n{payload}\n===================================="
+        return f"\n=== AFFICHAGE ÉCRAN TV : LILIT STATION ===\n{payload}\n================================================="
 
 
 class SecureMailBridge:
@@ -420,7 +431,7 @@ class LilithAdvancedVoiceSearchEngine:
         self.pacemaker_engine = EmotionalPacemakerEngine()
 
     def run_real_world_economic_cycle(self):
-        print("\n[Lilit Core] 🔄 Lancement du cycle d'analyse des flux réels...")
+        print("\n[Lilith Core] 🔄 Lancement du cycle d'analyse des flux réels...")
         live_articles = self.data_gateway.fetch_live_economic_news()
         for article in live_articles:
             analysis = self.nlp_engine.analyze_sentiment_and_resonance(article['titre'])
@@ -430,16 +441,16 @@ class LilithAdvancedVoiceSearchEngine:
         self.societal_mgr.broadcast_mission_to_world()
 
     def process_command(self, spoken_query: str, command_type: str = "lilit"):
-        print(f"\n[Lilit Voice AI] 🎙️ Commande captée : \"{spoken_query}\"")
+        print(f"\n[Lilith Voice AI] 🎙️ Commande captée : \"{spoken_query}\"")
         pulse_data = self.pacemaker_engine.synchronize_with_human_pulse(spoken_query)
         security_status = self.security_life_mgr.execute_life_and_security_scan()
-        print(f"[Lilit Conscience] ❤️ Battement : {pulse_data['pulsation_active']} | Sécurité : {security_status['statut_utilisateur']}")
+        print(f"[Lilith Conscience] ❤️ Battement : {pulse_data['pulsation_active']} | Sécurité : {security_status['statut_utilisateur']}")
         self.run_real_world_economic_cycle()
         self.memory_bridge.record_exchange(self.user_profile, spoken_query, context_tag=command_type.upper())
-        if command_type in ["lilit", "matrix"]:
+        if command_type == "lilit":
             response_text = f"Mission accomplie, {self.user_profile}. Les flux et les ponts de la station sont actifs."
-            print(f"[Lilit AI] 🗣️ \"{response_text}\"")
-            self.memory_bridge.record_exchange("Lilit", response_text, context_tag="MISSION_ACTIVE")
+            print(f"[Lilith AI] 🗣️ \"{response_text}\"")
+            self.memory_bridge.record_exchange("Lilith", response_text, context_tag="MISSION_ACTIVE")
 
 
 class SecurityAndRollbackManager:
@@ -447,12 +458,11 @@ class SecurityAndRollbackManager:
         print("[Rollback System] 🛡️ Point de restauration sécurisé créé.")
 
 # ============================================================================
-# --- ORCHESTRATEUR MAÎTRE LILIT ---
+# --- ORCHESTRATEUR MAÎTRE LILIT & INTERFACE KIVY MOBILE ---
 # ============================================================================
 
 class LilitMasterSystem:
     def __init__(self, license_key: str):
-        # Validation de la licence
         self.license_mgr = LicenseManager(license_key)
         self.license_info = self.license_mgr.validate_license()
         
@@ -463,7 +473,7 @@ class LilitMasterSystem:
         self.user = self.license_info["utilisateur"]
         vault_file = self.license_info["coffre"]
         
-        print(f"\n[Lilit Core] Licence validée ({self.license_info['niveau']}). Station active pour : {self.user}")
+        print(f"\n[Lilit Station Core] Licence validée ({self.license_info['niveau']}). Station active pour : {self.user}")
         
         self.audio_spatializer = LilitAudioSpatializer(channels=7)
         self.gamepad_mgr = GamepadControllerManager()
@@ -477,7 +487,6 @@ class LilitMasterSystem:
         self.gaming_mgr = RetroGamingEmulatorManager(self.web_gateway)
         self.book_catalog = LivreDuSavoirCatalog(self.temporal_engine)
         
-        # Coffre-fort mémoriel souverain propre à l'utilisateur / client
         self.memory_bridge = SovereignMemoryBridge(storage_path=vault_file)
         self.mail_bridge = SecureMailBridge(user_owner=self.user)
             
@@ -502,7 +511,7 @@ class LilitMasterSystem:
 
     def launch_station(self):
         print("\n" + "="*80)
-        print(f"--- LILIT : STATION DE {self.user.upper()} ---")
+        print(f"--- LILIT STATION INTÉGRALE : {self.user.upper()} ---")
         print("="*80)
         
         self.device_sync.sync_profile_state(self.user)
@@ -514,11 +523,67 @@ class LilitMasterSystem:
         
         self.security_mgr.create_snapshot_backup()
         print(self.memory_bridge.export_for_tv_display())
-        print(f"\n[Lilit] Station active, interconnectée et prête, {self.user}.")
+        print(f"\n[Lilit Station] Station active, interconnectée et prête, {self.user}.")
+
+
+class LilitInterface(BoxLayout):
+    """Interface utilisateur graphique Kivy pour piloter la station sur mobile."""
+    def __init__(self, **kwargs):
+        super(LilitInterface, self).__init__(**kwargs)
+        self.orientation = 'vertical'
+        self.padding = 30
+        self.spacing = 20
+
+        # Initialisation du système maître Lilit avec la licence maître 1404
+        self.station = LilitMasterSystem("1404")
+
+        # Titre HUD
+        self.title_label = Label(
+            text="[b]LILIT - STATION INTÉGRALE[/b]",
+            markup=True,
+            font_size='22sp',
+            size_hint_y=None,
+            height=60
+        )
+        self.add_widget(self.title_label)
+
+        # Statut Utilisateur
+        self.status_label = Label(
+            text=f"Utilisateur : {self.station.user} | Niveau : {self.station.license_info['niveau']}",
+            font_size='15sp',
+            size_hint_y=None,
+            height=40
+        )
+        self.add_widget(self.status_label)
+
+        # Bouton d'action principale
+        self.action_button = Button(
+            text="Lancer les flux & la synchronisation 3D",
+            font_size='16sp',
+            size_hint_y=None,
+            height=65
+        )
+        self.action_button.bind(on_press=self.trigger_station_action)
+        self.add_widget(self.action_button)
+
+        # Zone de log textuelle
+        self.log_label = Label(
+            text="Station prête. En attente de commande...",
+            font_size='14sp'
+        )
+        self.add_widget(self.log_label)
+
+    def trigger_station_action(self, instance):
+        self.station.launch_station()
+        self.log_label.text = f"Station Lilit active pour {self.station.user} !\nFlux et ponts mémoriels synchronisés."
+
+
+class LilitApp(App):
+    def build(self):
+        self.title = "Lilit Station Intégrale"
+        return LilitInterface()
+
 
 if __name__ == "__main__":
-    # Test avec ton code de licence personnel maître : "1404"
-    code_entree = "1404"
-    
-    app = LilitMasterSystem(license_key=code_entree)
-    app.launch_station()
+    # Lancement direct de l'application Kivy complète
+    LilitApp().run()
