@@ -18,7 +18,7 @@ source.include_exts = py,json,txt
 version = 1.0
 
 # Dépendances requises pour faire tourner l'interface Kivy sur mobile
-requirements = python3==3.11,hostpython3==3.11,kivy,sdl2
+requirements = kivy,sdl2
 
 # Orientation de l'écran (portrait recommandé pour cette interface)
 orientation = portrait
