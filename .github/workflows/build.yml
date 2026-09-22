@@ -15,7 +15,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: "3.11"
 
     - name: Install system dependencies
       run: |
@@ -26,7 +26,14 @@ jobs:
           git \
           python3-dev \
           ffmpeg \
-          libltdl-dev
+          libsdl2-dev \
+          openjdk-17-jdk \
+          unzip \
+          zip \
+          zlib1g-dev \
+          libncurses5 \
+          libffi-dev \
+          libssl-dev
 
     - name: Install Buildozer and Cython
       run: |
@@ -40,5 +47,5 @@ jobs:
     - name: Upload generated APK
       uses: actions/upload-artifact@v4
       with:
-        name: lilit-station-apk     
+        name: lilit-station-apk
         path: bin/*.apk
