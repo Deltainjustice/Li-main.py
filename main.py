@@ -362,7 +362,13 @@ class SocietalAndGeopoliticalIntelligenceModule:
 
 class SovereignMemoryBridge:
     def __init__(self, storage_path: str = "lilit_vault.json"):
-        self.storage_path = storage_path
+        # Gestion sécurisée du chemin sur Android et bureau
+        try:
+            app_dir = App.get_running_app().user_data_dir
+            self.storage_path = os.path.join(app_dir, storage_path)
+        except Exception:
+            self.storage_path = storage_path
+            
         self.session_history: List[Dict[str, Any]] = []
         self.load_vault()
 
@@ -574,8 +580,25 @@ class LilitInterface(BoxLayout):
         self.add_widget(self.log_label)
 
     def trigger_station_action(self, instance):
-        self.station.launch_station()
-        self.log_label.text = f"Station Lilit active pour {self.station.user} !\nFlux et ponts mémoriels synchronisés."
+        self.log_label.text = "Exécution des flux en arrière-plan..."
+        # Lancement dans un thread séparé pour empêcher le gel de l'interface Android
+        threading.Thread(target=self._run_station_thread, daemon=True).start()
+
+    def _run_station_thread(self):
+        try:
+            self.station.launch_station()
+            Clock.schedule_once(lambda dt: setattr(
+                self.log_label, 
+                'text', 
+                f"Station Lilit active pour {self.station.user} !\nFlux et ponts mémoriels synchronisés."
+            ))
+        except Exception as e:
+            error_msg = str(e)
+            Clock.schedule_once(lambda dt: setattr(
+                self.log_label, 
+                'text', 
+                f"Erreur d'exécution : {error_msg}"
+            ))
 
 
 class LilitApp(App):
