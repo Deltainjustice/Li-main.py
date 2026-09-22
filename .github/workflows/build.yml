@@ -31,10 +31,10 @@ jobs:
           unzip \
           zip \
           zlib1g-dev \
-          libncurses5 \
           libffi-dev \
           libssl-dev
 
+    
     - name: Install Buildozer and Cython
       run: |
         pip install --upgrade pip
