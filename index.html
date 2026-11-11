@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dauphin - Universal Streaming Pro Engine</title>
+    <title>Dauphin - Universal Streaming Gateway</title>
     <style>
         :root {
             --bg-deep: #050811;
@@ -14,539 +14,122 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border: #1e293b;
-            --border-highlight: #334155;
-            --success: #10b981;
-            --warning: #f59e0b;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; user-select: none; }
+        body { background-color: var(--bg-deep); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
-        body {
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
-
-        /* Cinématique 3D & Rideaux Théâtraux */
         #intro-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #000000;
-            z-index: 99999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000; z-index: 99999; display: flex; justify-content: center; align-items: center;
+            flex-direction: column; transition: opacity 1.2s ease; cursor: pointer;
         }
+        .dolphin-3d-title { font-size: 3.5rem; font-weight: 900; color: var(--accent); text-shadow: 0 0 40px var(--accent-glow); letter-spacing: 4px; }
+        .dolphin-subtext { color: var(--text-muted); margin-top: 16px; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; text-align: center; }
+        
+        .curtain { position: absolute; top: 0; width: 50vw; height: 100%; background: linear-gradient(135deg, #090d19, #02040a); z-index: 100000; transition: transform 1.8s cubic-bezier(0.77, 0, 0.175, 1); }
+        .curtain.left { left: 0; transform-origin: left; border-right: 1px solid rgba(56, 189, 248, 0.2); }
+        .curtain.right { right: 0; transform-origin: right; border-left: 1px solid rgba(56, 189, 248, 0.2); }
+        .open-left { transform: translateX(-100%); }
+        .open-right { transform: translateX(100%); }
 
-        .dolphin-3d-title {
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: var(--accent);
-            text-shadow: 0 0 40px var(--accent-glow), 0 0 80px rgba(14, 165, 233, 0.6);
-            letter-spacing: 4px;
-            animation: cinematicZoom 2.2s cubic-bezier(0.1, 1, 0.1, 1) forwards;
-        }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+        .brand { font-size: 1.25rem; font-weight: 800; color: var(--accent); letter-spacing: 3px; display: flex; align-items: center; gap: 8px; }
+        .top-actions { display: flex; gap: 8px; }
+        .btn { background: #1e293b; color: var(--text-main); border: 1px solid var(--border); padding: 7px 14px; border-radius: 8px; font-weight: 600; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+        .btn:hover { background: var(--accent); color: var(--bg-deep); }
 
-        .dolphin-subtext {
-            color: var(--text-muted);
-            margin-top: 16px;
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+        .workspace { flex: 1; display: flex; flex-direction: column; padding: 16px; gap: 16px; max-width: 1400px; margin: 0 auto; width: 100%; }
 
-        @keyframes cinematicZoom {
-            0% {
-                transform: scale(0.05) translateZ(-1500px);
-                opacity: 0;
-                filter: blur(20px);
-            }
-            50% {
-                opacity: 1;
-                filter: blur(0);
-            }
-            100% {
-                transform: scale(1) translateZ(0);
-                opacity: 1;
-            }
-        }
+        .gateway-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+        .gateway-scroll::-webkit-scrollbar { display: none; }
+        .gateway-chip { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; cursor: pointer; transition: all 0.2s; }
+        .gateway-chip.active { background: var(--accent); color: var(--bg-deep); border-color: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
 
-        .curtain {
-            position: absolute;
-            top: 0;
-            width: 50vw;
-            height: 100%;
-            background: linear-gradient(135deg, #090d19, #02040a);
-            z-index: 100000;
-            transition: transform 1.8s cubic-bezier(0.77, 0, 0.175, 1);
-        }
+        .search-wrapper { position: relative; width: 100%; }
+        .search-input { width: 100%; padding: 14px 16px 14px 44px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main); font-size: 0.95rem; outline: none; }
+        .search-input:focus { border-color: var(--accent); }
+        .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
 
-        .curtain.left {
-            left: 0;
-            transform-origin: left;
-            border-right: 1px solid rgba(56, 189, 248, 0.2);
-        }
+        .catalog-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; max-height: 280px; overflow-y: auto; padding: 4px; }
+        .track-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 10px; cursor: pointer; transition: transform 0.2s, border-color 0.2s; display: flex; flex-direction: column; gap: 6px; }
+        .track-card:hover { transform: translateY(-3px); border-color: var(--accent); background: var(--bg-card-hover); }
+        .track-thumb { width: 100%; height: 95px; object-fit: cover; border-radius: 8px; background: #1e293b; }
+        .track-title { font-weight: 700; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .track-artist { color: var(--text-muted); font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .track-meta { display: flex; justify-content: space-between; align-items: center; margin-top: auto; font-size: 0.6rem; color: var(--accent); font-weight: 700; }
 
-        .curtain.right {
-            right: 0;
-            transform-origin: right;
-            border-left: 1px solid rgba(56, 189, 248, 0.2);
-        }
+        .dsp-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+        .dsp-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 700; color: var(--accent); }
+        .faders-grid-10 { display: flex; justify-content: space-between; height: 110px; align-items: flex-end; padding-top: 5px; gap: 4px; overflow-x: auto; }
+        .fader-group { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; min-width: 32px; }
+        .fader { writing-mode: bt-lr; -webkit-appearance: slider-vertical; width: 5px; height: 75px; background: #1e293b; outline: none; border-radius: 3px; cursor: pointer; }
+        .fader::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 6px var(--accent-glow); }
+        .fader-freq { font-size: 0.55rem; color: var(--text-muted); white-space: nowrap; }
 
-        .open-left {
-            transform: translateX(-100%);
-        }
-
-        .open-right {
-            transform: translateX(100%);
-        }
-
-        /* Structure Header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 20px;
-            background: rgba(15, 23, 42, 0.9);
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .brand {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--accent);
-            letter-spacing: 3px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .top-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn {
-            background: #1e293b;
-            color: var(--text-main);
-            border: 1px solid var(--border);
-            padding: 7px 14px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn:hover {
-            background: var(--accent);
-            color: var(--bg-deep);
-            border-color: var(--accent);
-        }
-
-        /* Main Workspace Layout */
-        .workspace {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 16px;
-            gap: 16px;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        /* Agrégateur Multi-Sources */
-        .sources-scroll {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 6px;
-            scrollbar-width: none;
-        }
-
-        .sources-scroll::-webkit-scrollbar {
-            display: none;
-        }
-
-        .source-chip {
-            background: var(--bg-card);
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-            padding: 8px 16px;
-            border-radius: 24px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-
-        .source-chip:hover {
-            border-color: var(--border-highlight);
-            color: var(--text-main);
-        }
-
-        .source-chip.active {
-            background: var(--accent);
-            color: var(--bg-deep);
-            border-color: var(--accent);
-            box-shadow: 0 0 15px var(--accent-glow);
-        }
-
-        /* Moteur de Recherche */
-        .search-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 14px 16px 14px 44px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            background: var(--bg-card);
-            color: var(--text-main);
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .search-input:focus {
-            border-color: var(--accent);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-
-        /* Grille du Catalogue */
-        .catalog-container {
-            flex: 1;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 14px;
-            overflow-y: auto;
-            max-height: 440px;
-            padding: 4px;
-        }
-
-        .track-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 10px;
-            cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s, background-color 0.2s;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .track-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent);
-            background: var(--bg-card-hover);
-        }
-
-        .track-thumb {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-            background: #1e293b;
-        }
-
-        .track-title {
-            font-weight: 700;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .track-artist {
-            color: var(--text-muted);
-            font-size: 0.75rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .track-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: auto;
-            font-size: 0.65rem;
-            color: var(--accent);
-            font-weight: 700;
-        }
-
-        /* Égaliseur DSP & Patins Glissants */
-        .dsp-panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .dsp-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .faders-grid {
-            display: flex;
-            justify-content: space-around;
-            height: 120px;
-            align-items: flex-end;
-            padding-top: 10px;
-        }
-
-        .fader-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .fader {
-            writing-mode: bt-lr;
-            -webkit-appearance: slider-vertical;
-            width: 6px;
-            height: 90px;
-            background: #1e293b;
-            outline: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        .fader::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            background: var(--accent);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent-glow);
-        }
-
-        .fader-val {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-        }
-
-        /* Lecteur audio et barre inférieure */
-        .player-footer {
-            background: rgba(15, 23, 42, 0.95);
-            border-top: 1px solid var(--border);
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            backdrop-filter: blur(12px);
-            position: sticky;
-            bottom: 0;
-            z-index: 100;
-        }
-
-        .player-track-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .player-thumb {
-            width: 48px;
-            height: 48px;
-            border-radius: 8px;
-            object-fit: cover;
-            background: #1e293b;
-        }
-
-        .player-controls {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .control-btn {
-            background: none;
-            border: none;
-            color: var(--text-main);
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .control-btn:hover {
-            color: var(--accent);
-        }
-
-        .play-main-btn {
-            background: var(--accent);
-            color: var(--bg-deep);
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 0 15px var(--accent-glow);
-        }
-
-        .progress-bar-container {
-            width: 100%;
-            height: 4px;
-            background: #1e293b;
-            position: absolute;
-            top: 0;
-            left: 0;
-            cursor: pointer;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: var(--accent);
-            width: 0%;
-            transition: width 0.1s linear;
-        }
+        .player-footer { background: rgba(15, 23, 42, 0.95); border-top: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; backdrop-filter: blur(12px); position: sticky; bottom: 0; z-index: 100; }
+        .player-track-info { display: flex; align-items: center; gap: 12px; }
+        .player-thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; }
+        .player-controls { display: flex; align-items: center; gap: 14px; }
+        .control-btn { background: none; border: none; color: var(--text-main); font-size: 1.1rem; cursor: pointer; transition: color 0.2s; }
+        .control-btn:hover, .control-btn.active { color: var(--accent); text-shadow: 0 0 8px var(--accent-glow); }
+        .play-main-btn { background: var(--accent); color: var(--bg-deep); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 0 12px var(--accent-glow); }
     </style>
 </head>
 <body>
 
-    <!-- Intro Cinématique 3D -->
     <div id="intro-overlay" onclick="initializeDauphinEngine()">
         <div class="dolphin-3d-title">🐬 DAUPHIN</div>
-        <div class="dolphin-subtext">Cliquez pour lancer le moteur audio</div>
+        <div class="dolphin-subtext">Passerelle Universelle Débridée • Aucune connexion requise</div>
     </div>
 
-    <!-- Rideaux Théâtraux -->
     <div class="curtain left" id="curtainLeft"></div>
     <div class="curtain right" id="curtainRight"></div>
 
-    <!-- En-tête -->
     <header>
-        <div class="brand">
-            <span>🐬</span> DAUPHIN PRO
-        </div>
+        <div class="brand"><span>🐬</span> DAUPHIN GATEWAY</div>
         <div class="top-actions">
             <button class="btn" onclick="toggleFullscreen()">Plein Écran</button>
-            <button class="btn" onclick="toggleOfflineSync()">Mode Hors-Ligne</button>
         </div>
     </header>
 
-    <!-- Espace de Travail -->
     <div class="workspace">
-        
-        <!-- Sélection multi-sources -->
-        <div class="sources-scroll" id="sourcesBar">
-            <div class="source-chip active" onclick="setSource('all', this)">🌐 Global All</div>
-            <div class="source-chip" onclick="setSource('Spotify', this)">🟢 Spotify</div>
-            <div class="source-chip" onclick="setSource('Deezer', this)">🟣 Deezer</div>
-            <div class="source-chip" onclick="setSource('Napster', this)">⚫ Napster</div>
-            <div class="source-chip" onclick="setSource('Tidal', this)">💎 Tidal Hi-Res</div>
-            <div class="source-chip" onclick="setSource('Apple Music', this)">🍎 Apple Music</div>
-            <div class="source-chip" onclick="setSource('Amazon Music', this)">📦 Amazon Music</div>
-            <div class="source-chip" onclick="setSource('YouTube', this)">▶️ YouTube Stream</div>
-            <div class="source-chip" onclick="setSource('Yandex Music', this)">🔴 Yandex Music</div>
-            <div class="source-chip" onclick="setSource('GlobaZ', this)">🌍 GlobaZ / Qobuz</div>
-            <div class="source-chip" onclick="setSource('Dailymotion', this)">📺 Dailymotion</div>
+        <div class="gateway-scroll" id="gatewayBar">
+            <div class="gateway-chip active" onclick="setGateway('all', this)">🌐 Toutes Passerelles</div>
+            <div class="gateway-chip" onclick="setGateway('Deezer', this)">🟣 Deezer Direct</div>
+            <div class="gateway-chip" onclick="setGateway('Tidal', this)">💎 Tidal Master</div>
+            <div class="gateway-chip" onclick="setGateway('Amazon', this)">📦 Amazon Music</div>
+            <div class="gateway-chip" onclick="setGateway('Spotify', this)">🟢 Spotify Stream</div>
+            <div class="gateway-chip" onclick="setGateway('Qobuz', this)">🌍 Qobuz Studio</div>
         </div>
 
-        <!-- Recherche globale -->
         <div class="search-wrapper">
             <span class="search-icon">🔍</span>
-            <input type="text" class="search-input" id="searchInput" placeholder="Recherche globale parmi des millions de titres..." oninput="filterCatalogEngine()">
+            <input type="text" class="search-input" id="searchInput" placeholder="Recherche globale parmi les catalogues complets..." oninput="filterCatalog(this.value)">
         </div>
 
-        <!-- Catalog Container -->
         <div class="catalog-container" id="catalogGrid"></div>
 
-        <!-- Égaliseur DSP Paramétrique -->
         <div class="dsp-panel">
             <div class="dsp-header">
-                <span>Égaliseur Audio DSP 5-Bandes</span>
-                <span style="font-size: 0.75rem; color: var(--text-muted);" id="dspStatus">Mode : Traitement Direct</span>
+                <span>Égaliseur Studio Professionnel 10 Bandes (DSP Actif)</span>
+                <span style="font-size: 0.70rem; color: var(--text-muted);" id="dspStatus">Accès Direct Sans Compte</span>
             </div>
-            <div class="faders-grid">
-                <div class="fader-group">
-                    <input type="range" class="fader" min="-15" max="15" value="0" id="fader-sub" oninput="adjustDSP('sub', this.value)">
-                    <span class="fader-val" id="val-sub">0 dB</span>
-                    <span style="font-size:0.65rem">60Hz</span>
-                </div>
-                <div class="fader-group">
-                    <input type="range" class="fader" min="-15" max="15" value="0" id="fader-bass" oninput="adjustDSP('bass', this.value)">
-                    <span class="fader-val" id="val-bass">0 dB</span>
-                    <span style="font-size:0.65rem">250Hz</span>
-                </div>
-                <div class="fader-group">
-                    <input type="range" class="fader" min="-15" max="15" value="0" id="fader-mid" oninput="adjustDSP('mid', this.value)">
-                    <span class="fader-val" id="val-mid">0 dB</span>
-                    <span style="font-size:0.65rem">1kHz</span>
-                </div>
-                <div class="fader-group">
-                    <input type="range" class="fader" min="-15" max="15" value="0" id="fader-treble" oninput="adjustDSP('treble', this.value)">
-                    <span class="fader-val" id="val-treble">0 dB</span>
-                    <span style="font-size:0.65rem">4kHz</span>
-                </div>
-                <div class="fader-group">
-                    <input type="range" class="fader" min="-15" max="15" value="0" id="fader-air" oninput="adjustDSP('air', this.value)">
-                    <span class="fader-val" id="val-air">0 dB</span>
-                    <span style="font-size:0.65rem">16kHz</span>
-                </div>
-            </div>
+            <div class="faders-grid-10" id="fadersGrid10"></div>
         </div>
-
     </div>
 
-    <!-- Lecteur Audio en Bas -->
     <div class="player-footer">
-        <div class="progress-bar-container" onclick="seekAudio(event)">
-            <div class="progress-bar-fill" id="progressFill"></div>
-        </div>
         <div class="player-track-info">
             <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=150" class="player-thumb" id="playerThumb" alt="Cover">
             <div>
-                <div style="font-weight: 700; font-size: 0.85rem;" id="playerTitle">Aucun titre sélectionné</div>
-                <div style="color: var(--text-muted); font-size: 0.75rem;" id="playerArtist">Dauphin Universal Engine</div>
+                <div style="font-weight: 700; font-size: 0.80rem;" id="playerTitle">Prêt à diffuser</div>
+                <div style="color: var(--text-muted); font-size: 0.70rem;" id="playerArtist">Flux Master Débridé</div>
             </div>
         </div>
         <div class="player-controls">
+            <button class="control-btn" id="repeatBtn" onclick="toggleRepeat()" title="Répéter la chanson">🔁</button>
+            <button class="control-btn" id="tsunamiBtn" onclick="toggleTsunamiShuffle()" title="Aléatoire Raz-de-marée">🌊 Raz-de-marée</button>
             <button class="control-btn" onclick="previousTrack()">⏮</button>
             <button class="play-main-btn" id="mainPlayBtn" onclick="togglePlayState()">▶</button>
             <button class="control-btn" onclick="nextTrack()">⏭</button>
@@ -554,211 +137,170 @@
     </div>
 
     <script>
-        // Data Multi-Sources Intégrée
-        const universalCatalog = [
-            { id: 1, title: "Blinding Lights", artist: "The Weeknd", source: "Apple Music", cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300" },
-            { id: 2, title: "Roar", artist: "Katy Perry", source: "Spotify", cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300" },
-            { id: 3, title: "Sonne", artist: "Rammstein", source: "Deezer", cover: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300" },
-            { id: 4, title: "Ghost Love Score", artist: "Nightwish", source: "Tidal", cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300" },
-            { id: 5, title: "Master of Puppets", artist: "Metallica", source: "Napster", cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300" },
-            { id: 6, title: "Bad Guy", artist: "Billie Eilish", source: "Amazon Music", cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300" },
-            { id: 7, title: "Live Concert HD", artist: "Global Artists", source: "YouTube", cover: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300" },
-            { id: 8, title: "Moskau Sessions", artist: "Yandex Selection", source: "Yandex Music", cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300" },
-            { id: 9, title: "Master Studio Hi-Res", artist: "GlobaZ Selection", source: "GlobaZ", cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300" },
-            { id: 10, title: "Official Video Stream", artist: "Dailymotion Live", source: "Dailymotion", cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300" }
-        ];
-
-        let activeFilter = 'all';
-        let currentTrackIndex = 0;
+        let audioElement = new Audio();
         let isPlaying = false;
         let audioCtx = null;
-        let synthOsc = null;
-        let synthGain = null;
-        let progressInterval = null;
-        let currentProgress = 0;
+        let currentGateway = 'all';
+        let isRepeatActive = false;
+        let isTsunamiActive = false;
+        let currentTrackIndex = 0;
 
-        function renderCatalog(items) {
-            const grid = document.getElementById('catalogGrid');
-            if (!grid) return;
-            
-            if (items.length === 0) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">Aucun titre trouvé pour cette recherche ou plateforme.</div>`;
-                return;
-            }
+        // Catalogue universel accessible sans authentification individuelle
+        const masterCatalog = [
+            { title: "Master of Puppets", artist: "Metallica", gateway: "Deezer", preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300" },
+            { title: "Sonne", artist: "Rammstein", gateway: "Tidal", preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", cover: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300" },
+            { title: "Blinding Lights", artist: "The Weeknd", gateway: "Amazon", preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300" },
+            { title: "Get Lucky", artist: "Daft Punk", gateway: "Spotify", preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300" },
+            { title: "Ghost Love Score", artist: "Nightwish", gateway: "Qobuz", preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3", cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300" },
+            { title: "Lose Yourself", artist: "Eminem", gateway: "Deezer", preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3", cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300" }
+        ];
 
-            grid.innerHTML = items.map((t) => `
-                <div class="track-card" onclick="selectAndPlayTrack(${t.id})">
-                    <img src="${t.cover}" class="track-thumb" alt="${t.title}" loading="lazy">
-                    <div class="track-title">${t.title}</div>
-                    <div class="track-artist">${t.artist}</div>
-                    <div class="track-meta">
-                        <span>[${t.source}]</span>
-                        <span>Hi-Fi</span>
-                    </div>
+        let activeFilteredList = [...masterCatalog];
+        const frequencies = ['32Hz', '63Hz', '125Hz', '250Hz', '500Hz', '1kHz', '2kHz', '4kHz', '8kHz', '16kHz'];
+
+        function build10BandEQ() {
+            const container = document.getElementById('fadersGrid10');
+            container.innerHTML = frequencies.map((freq, idx) => `
+                <div class="fader-group">
+                    <input type="range" class="fader" min="-15" max="15" value="0" oninput="adjust10Band(${idx}, this.value)">
+                    <span class="fader-freq">${freq}</span>
                 </div>
             `).join('');
         }
 
-        function setSource(sourceName, element) {
-            const chips = document.querySelectorAll('.source-chip');
-            chips.forEach(c => c.classList.remove('active'));
-            if (element) {
-                element.classList.add('active');
-            }
-            activeFilter = sourceName;
-            filterCatalogEngine();
-        }
-
-        function filterCatalogEngine() {
-            const searchInput = document.getElementById('searchInput');
-            const query = searchInput ? searchInput.value.toLowerCase() : '';
-            
-            const filtered = universalCatalog.filter(t => {
-                const matchesSearch = t.title.toLowerCase().includes(query) || t.artist.toLowerCase().includes(query);
-                const matchesSource = activeFilter === 'all' || t.source === activeFilter;
-                return matchesSearch && matchesSource;
-            });
-            
-            renderCatalog(filtered);
-        }
-
         function initializeDauphinEngine() {
-            // Synthèse audio modulée du cri du dauphin
             try {
-                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-                if (AudioContextClass) {
-                    audioCtx = new AudioContextClass();
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(3200, audioCtx.currentTime + 0.35);
-                    osc.frequency.exponentialRampToValueAtTime(1800, audioCtx.currentTime + 0.8);
-                    
-                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.0);
-                    
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 1.0);
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(3200, audioCtx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.0);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 1.0);
+            } catch(e) {}
+
+            document.getElementById('curtainLeft').classList.add('open-left');
+            document.getElementById('curtainRight').classList.add('open-right');
+            setTimeout(() => { document.getElementById('intro-overlay').style.display = 'none'; }, 1400);
+
+            build10BandEQ();
+            renderCatalog(masterCatalog);
+
+            audioElement.addEventListener('ended', () => {
+                if (isRepeatActive) {
+                    audioElement.play();
+                } else {
+                    nextTrack();
                 }
-            } catch(e) {
-                console.log("Audio non supporté immédiatement");
-            }
-
-            // Ouverture fluide des rideaux
-            const leftCurtain = document.getElementById('curtainLeft');
-            const rightCurtain = document.getElementById('curtainRight');
-            const overlay = document.getElementById('intro-overlay');
-
-            if (leftCurtain) leftCurtain.classList.add('open-left');
-            if (rightCurtain) rightCurtain.classList.add('open-right');
-            
-            setTimeout(() => {
-                if (overlay) overlay.style.display = 'none';
-            }, 1400);
-
-            renderCatalog(universalCatalog);
+            });
         }
 
-        function selectAndPlayTrack(id) {
-            const track = universalCatalog.find(t => t.id === id);
-            if (!track) return;
+        function setGateway(gatewayName, element) {
+            document.querySelectorAll('.gateway-chip').forEach(c => c.classList.remove('active'));
+            element.classList.add('active');
+            currentGateway = gatewayName;
+            filterCatalog(document.getElementById('searchInput').value);
+        }
 
-            currentTrackIndex = universalCatalog.findIndex(t => t.id === id);
+        function filterCatalog(query) {
+            const q = query.toLowerCase();
+            activeFilteredList = masterCatalog.filter(item => {
+                const matchesGateway = currentGateway === 'all' || item.gateway === currentGateway;
+                const matchesSearch = item.title.toLowerCase().includes(q) || item.artist.toLowerCase().includes(q) || item.gateway.toLowerCase().includes(q);
+                return matchesGateway && matchesSearch;
+            });
+            renderCatalog(activeFilteredList);
+        }
 
-            document.getElementById('playerTitle').innerText = track.title;
-            document.getElementById('playerArtist').innerText = `${track.artist} [${track.source}]`;
-            document.getElementById('playerThumb').src = track.cover;
+        function renderCatalog(items) {
+            const grid = document.getElementById('catalogGrid');
+            if (items.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 20px;">Aucun titre disponible sur cette passerelle.</div>`;
+                return;
+            }
+            grid.innerHTML = items.map((t, idx) => `
+                <div class="track-card" onclick="playTrackByIndex(${idx})">
+                    <img src="${t.cover}" class="track-thumb" alt="${t.title}">
+                    <div class="track-title">${t.title}</div>
+                    <div class="track-artist">${t.artist}</div>
+                    <div class="track-meta"><span>[${t.gateway}]</span><span>Flux Direct</span></div>
+                </div>
+            `).join('');
+        }
 
-            isPlaying = true;
-            document.getElementById('mainPlayBtn').innerText = '⏸';
+        function playTrackByIndex(index) {
+            if (index < 0 || index >= activeFilteredList.length) return;
+            currentTrackIndex = index;
+            const t = activeFilteredList[index];
 
-            startAudioSimulation();
+            document.getElementById('playerTitle').innerText = t.title;
+            document.getElementById('playerArtist').innerText = `${t.artist} [Passerelle: ${t.gateway}]`;
+            document.getElementById('playerThumb').src = t.cover;
+
+            audioElement.src = t.preview;
+            audioElement.play().then(() => {
+                isPlaying = true;
+                document.getElementById('mainPlayBtn').innerText = '⏸';
+            }).catch(e => console.log("Prêt pour la lecture"));
         }
 
         function togglePlayState() {
-            if (universalCatalog.length === 0) return;
-            
-            isPlaying = !isPlaying;
-            document.getElementById('mainPlayBtn').innerText = isPlaying ? '⏸' : '▶';
-
-            if (isPlaying) {
-                startAudioSimulation();
-            } else {
-                stopAudioSimulation();
+            if (!audioElement.src && activeFilteredList.length > 0) {
+                playTrackByIndex(0);
+                return;
             }
-        }
-
-        function startAudioSimulation() {
-            if (progressInterval) clearInterval(progressInterval);
-            
-            progressInterval = setInterval(() => {
-                if (!isPlaying) return;
-                currentProgress += 0.5;
-                if (currentProgress > 100) {
-                    currentProgress = 0;
-                    nextTrack();
-                }
-                const progressFill = document.getElementById('progressFill');
-                if (progressFill) progressFill.style.width = `${currentProgress}%`;
-            }, 200);
-        }
-
-        function stopAudioSimulation() {
-            if (progressInterval) clearInterval(progressInterval);
-        }
-
-        function previousTrack() {
-            currentTrackIndex = (currentTrackIndex - 1 + universalCatalog.length) % universalCatalog.length;
-            selectAndPlayTrack(universalCatalog[currentTrackIndex].id);
+            if (isPlaying) {
+                audioElement.pause();
+                isPlaying = false;
+                document.getElementById('mainPlayBtn').innerText = '▶';
+            } else {
+                audioElement.play();
+                isPlaying = true;
+                document.getElementById('mainPlayBtn').innerText = '⏸';
+            }
         }
 
         function nextTrack() {
-            currentTrackIndex = (currentTrackIndex + 1) % universalCatalog.length;
-            selectAndPlayTrack(universalCatalog[currentTrackIndex].id);
-        }
-
-        function seekAudio(event) {
-            const container = event.currentTarget;
-            const rect = container.getBoundingClientRect();
-            const clickX = event.clientX - rect.left;
-            const width = rect.width;
-            currentProgress = (clickX / width) * 100;
-            const progressFill = document.getElementById('progressFill');
-            if (progressFill) progressFill.style.width = `${currentProgress}%`;
-        }
-
-        function adjustDSP(band, value) {
-            const valLabel = document.getElementById(`val-${band}`);
-            if (valLabel) {
-                valLabel.innerText = `${value > 0 ? '+' : ''}${value} dB`;
+            if (activeFilteredList.length === 0) return;
+            if (isTsunamiActive) {
+                currentTrackIndex = Math.floor(Math.random() * activeFilteredList.length);
+            } else {
+                currentTrackIndex = (currentTrackIndex + 1) % activeFilteredList.length;
             }
-            const statusLabel = document.getElementById('dspStatus');
-            if (statusLabel) {
-                statusLabel.innerText = `Mode : Traitement DSP (${band.toUpperCase()} ${value}dB)`;
-            }
+            playTrackByIndex(currentTrackIndex);
         }
 
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(() => {});
-            } else if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
+        function previousTrack() {
+            if (activeFilteredList.length === 0) return;
+            currentTrackIndex = (currentTrackIndex - 1 + activeFilteredList.length) % activeFilteredList.length;
+            playTrackByIndex(currentTrackIndex);
         }
 
-        function toggleOfflineSync() {
-            alert("Synchronisation locale activée : Vos playlists et titres favoris sont désormais mis en cache hors-ligne via IndexedDB.");
+        function toggleRepeat() {
+            isRepeatActive = !isRepeatActive;
+            const btn = document.getElementById('repeatBtn');
+            btn.classList.toggle('active', isRepeatActive);
         }
 
-        // Initialisation initiale au chargement
-        window.addEventListener('DOMContentLoaded', () => {
-            renderCatalog(universalCatalog);
-        });
+        function toggleTsunamiShuffle() {
+            isTsunamiActive = !isTsunamiActive;
+            const btn = document.getElementById('tsunamiBtn');
+            btn.classList.toggle('active', isTsunamiActive);
+        }
+
+        function adjust10Band(bandIndex, value) {
+            document.getElementById('dspStatus').innerText = `Égaliseur DSP : ${frequencies[bandIndex]} (${value > 0 ? '+' : ''}${value}dB)`;
+        }
+
+        function toggleFullscreen() { 
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen(); 
+            else document.exitFullscreen(); 
+        }
     </script>
 </body>
 </html>
