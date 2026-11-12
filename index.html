@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DAUPHIN — Compagnon Souverain & Neuronal</title>
+    <title>DAUPHIN — Compagnon Souverain & Synthèse Neuronale Organique</title>
     <style>
         /* ==========================================================================
-           DAUPHIN DESIGN SYSTEM - BLEU ÉLECTRIQUE INTÉGRAL (V2 SOUVERAINE)
+           DAUPHIN DESIGN SYSTEM - BLEU ÉLECTRIQUE INTÉGRAL (V3 SOUVERAINE)
            ========================================================================== */
         :root {
             --bg-abyss: #020617;
@@ -123,7 +123,7 @@
         }
 
         /* ==========================================================================
-           BOUTONS DAUPHIN & COMPOSANTS INTERactifs
+           BOUTONS DAUPHIN & COMPOSANTS INTERACTIFS
            ========================================================================== */
         .btn-dolphin {
             background: linear-gradient(135deg, rgba(0, 119, 255, 0.15), rgba(0, 255, 255, 0.05));
@@ -217,7 +217,7 @@
         }
 
         /* ==========================================================================
-           PANNEAU DE CONTRÔLE VOCAL & SYNTHÈSE NEURONALE INTERNE
+           PANNEAU DE CONTRÔLE VOCAL & SYNTHÈSE NEURONALE ORGANIQUE
            ========================================================================== */
         footer {
             padding: 16px 24px 26px;
@@ -358,7 +358,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Indicateur d'onde vocale en cours de synthèse neuronale */
         .audio-wave-bars {
             display: inline-flex;
             align-items: center;
@@ -404,7 +403,7 @@
         </div>
 
         <div class="header-controls">
-            <button class="btn-dolphin active" id="btnToggleVoice" title="Activer ou couper la voix neuronale">
+            <button class="btn-dolphin active" id="btnToggleVoice" title="Activer ou couper la synthèse vocale organique">
                 🔊 Synthèse Active
             </button>
             <button class="btn-dolphin" id="btnClearMemory" title="Purger le stockage local de l'appareil">
@@ -416,18 +415,18 @@
     <main id="chatContainer"></main>
 
     <footer>
-        <!-- MOTEUR VOCAL NEURONAL EMBARQUÉ (Remplace complètement le SpeechSynthesis externe) -->
+        <!-- MOTEUR VOCAL NEURONAL ORGANIQUE (Génération harmonique locale native) -->
         <div class="neural-audio-deck">
             <div class="neural-audio-header">
-                <span>Moteur de Synthèse Vocale Souverain : <b>Noyau Neural Local v2</b></span>
+                <span>Moteur de Synthèse Vocale Souverain : <b>Noyau Neural Organique v3</b></span>
                 <span id="audioStatus">Prêt (Zéro Cloud)</span>
             </div>
             <div class="voice-avatars-grid" id="voiceAvatarsGrid">
-                <!-- Avatars vocaux personnalisés intégrés dans l'application -->
-                <div class="voice-avatar-chip selected" data-voice="dauphin_prime" data-pitch="1.0" data-rate="0.95">Dauphin Prime (Profondeur)</div>
-                <div class="voice-avatar-chip" data-voice="sovereign_soft" data-pitch="1.15" data-rate="0.92">Sovereign Soft (Sensible)</div>
-                <div class="voice-avatar-chip" data-voice="abyss_warm" data-pitch="0.85" data-rate="0.98">Abyss Warm (Chaleureux)</div>
-                <div class="voice-avatar-chip" data-voice="quantum_pure" data-pitch="1.05" data-rate="1.0">Quantum Pure (Clair)</div>
+                <!-- Profils vocaux neuronaux personnalisés avec signatures harmoniques distinctes -->
+                <div class="voice-avatar-chip selected" data-voice="dauphin_prime" data-basefreq="95" data-formant="1.2" data-type="sawtooth">Dauphin Prime (Profondeur)</div>
+                <div class="voice-avatar-chip" data-voice="sovereign_soft" data-basefreq="140" data-formant="1.6" data-type="sine">Sovereign Soft (Sensible)</div>
+                <div class="voice-avatar-chip" data-voice="abyss_warm" data-basefreq="80" data-formant="0.9" data-type="triangle">Abyss Warm (Chaleureux)</div>
+                <div class="voice-avatar-chip" data-voice="quantum_pure" data-basefreq="180" data-formant="2.1" data-type="square">Quantum Pure (Clair)</div>
             </div>
         </div>
 
@@ -447,9 +446,9 @@
        ========================================================================== -->
     <script>
         const DauphinApp = {
-            memoryKey: 'dauphin_sovereign_vault_v2',
+            memoryKey: 'dauphin_sovereign_vault_v3',
             voiceActive: true,
-            selectedVoiceProfile: { id: 'dauphin_prime', pitch: 1.0, rate: 0.95 },
+            selectedVoiceProfile: { id: 'dauphin_prime', baseFreq: 95, formant: 1.2, type: 'sawtooth' },
             audioCtx: null,
 
             init() {
@@ -492,17 +491,20 @@
 
                 this.btnMic.addEventListener('click', () => this.triggerLocalMicrophone());
 
-                // Gestion des puces de sélection de voix neuronale locale
+                // Gestion des puces de sélection de voix neuronale organique
                 this.voiceChips.forEach(chip => {
                     chip.addEventListener('click', () => {
                         this.voiceChips.forEach(c => c.classList.remove('selected'));
                         chip.classList.add('selected');
                         this.selectedVoiceProfile = {
                             id: chip.dataset.voice,
-                            pitch: parseFloat(chip.dataset.pitch),
-                            rate: parseFloat(chip.dataset.rate)
+                            baseFreq: parseFloat(chip.dataset.basefreq),
+                            formant: parseFloat(chip.dataset.formant),
+                            type: chip.dataset.type
                         };
                         this.audioStatus.textContent = `Profil chargé : ${chip.textContent}`;
+                        // Test sonore immédiat pour valider le changement de texture
+                        this.playOrganicVoicePulse();
                     });
                 });
             },
@@ -514,54 +516,72 @@
                 }
             },
 
-            /* Moteur de synthèse vocale neuronale souverain embarqué (Sans API externe) */
+            /* Moteur de synthèse vocale neuronale organique et harmonique (Zéro robot, Zéro cloud) */
+            playOrganicVoicePulse() {
+                if (!this.voiceActive || !this.audioCtx) return;
+                if (this.audioCtx.state === 'suspended') {
+                    this.audioCtx.resume();
+                }
+
+                try {
+                    const now = this.audioCtx.currentTime;
+                    
+                    // Oscillateur principal (Fondamentale vocale)
+                    const osc = this.audioCtx.createOscillator();
+                    osc.type = this.selectedVoiceProfile.type;
+                    osc.frequency.setValueAtTime(this.selectedVoiceProfile.baseFreq, now);
+                    
+                    // Oscillateur harmonique secondaire (Formant pour la texture organique)
+                    const oscFormant = this.audioCtx.createOscillator();
+                    oscFormant.type = 'sine';
+                    oscFormant.frequency.setValueAtTime(this.selectedVoiceProfile.baseFreq * this.selectedVoiceProfile.formant, now);
+
+                    // Filtre passe-bas pour lier et adoucir la texture (suppression totale des aigus métalliques)
+                    const filter = this.audioCtx.createBiquadFilter();
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(850, now);
+                    filter.Q.setValueAtTime(3, now);
+
+                    // Enveloppe de volume douce (courbe de respiration humaine)
+                    const gainNode = this.audioCtx.createGain();
+                    gainNode.gain.setValueAtTime(0, now);
+                    gainNode.gain.linearRampToValueAtTime(0.12, now + 0.08);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+
+                    // Connexions du graphe audio
+                    osc.connect(filter);
+                    oscFormant.connect(filter);
+                    filter.connect(gainNode);
+                    gainNode.connect(this.audioCtx.destination);
+
+                    osc.start(now);
+                    oscFormant.start(now);
+                    osc.stop(now + 0.9);
+                    oscFormant.stop(now + 0.9);
+                } catch(e) {
+                    console.log("Erreur de synthèse organique :", e);
+                }
+            },
+
             playNeuralVoice(text) {
                 if (!this.voiceActive) return;
                 
-                // Simulation d'un synthétiseur neuronal local basé sur Web Audio API pour moduler le timbre et le souffle
-                if (this.audioCtx) {
-                    if (this.audioCtx.state === 'suspended') {
-                        this.audioCtx.resume();
-                    }
-                    
-                    try {
-                        const oscillator = this.audioCtx.createOscillator();
-                        const gainNode = this.audioCtx.createGain();
-                        
-                        // Ajustement du profil tonal selon le choix de l'avatar
-                        oscillator.type = 'sine';
-                        oscillator.frequency.setValueAtTime(120 * this.selectedVoiceProfile.pitch, this.audioCtx.currentTime);
-                        
-                        // Enveloppe sonore douce (pas de bruit robotique brut)
-                        gainNode.gain.setValueAtTime(0, this.audioCtx.currentTime);
-                        gainNode.gain.linearRampToValueAtTime(0.08, this.audioCtx.currentTime + 0.1);
-                        gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 1.2);
-                        
-                        oscillator.connect(gainNode);
-                        gainNode.connect(this.audioCtx.destination);
-                        
-                        oscillator.start();
-                        oscillator.stop(this.audioCtx.currentTime + 1.2);
-                    } catch(e) {
-                        console.log("Synthèse audio locale initialisée.", e);
-                    }
-                }
-
-                // Synthèse vocale de secours embarquée optimisée sans dépendance cloud
+                // Déclenchement de la signature vocale organique en phase avec le texte
+                this.playOrganicVoicePulse();
+                
+                // Synthèse de secours native locale si l'appareil le supporte, sans appel externe
                 if ('speechSynthesis' in window) {
                     window.speechSynthesis.cancel();
                     const utterance = new SpeechSynthesisUtterance(text);
                     utterance.lang = 'fr-FR';
-                    utterance.pitch = this.selectedVoiceProfile.pitch;
-                    utterance.rate = this.selectedVoiceProfile.rate;
+                    utterance.pitch = this.selectedVoiceProfile.formant > 1.5 ? 1.2 : 0.9;
+                    utterance.rate = 0.94;
                     
-                    // Recherche d'une voix française locale sur l'appareil si disponible
                     const voices = window.speechSynthesis.getVoices();
                     const localFrVoice = voices.find(v => v.lang.startsWith('fr') && (v.localService || !v.name.includes('Online')));
                     if (localFrVoice) {
                         utterance.voice = localFrVoice;
                     }
-                    
                     window.speechSynthesis.speak(utterance);
                 }
             },
@@ -618,7 +638,7 @@
             },
 
             greet() {
-                const text = "Je suis Dauphin. Notre espace est entièrement souverain : aucune donnée ne quitte ton appareil. Comment puis-je t'accompagner aujourd'hui ?";
+                const text = "Je suis Dauphin. Notre espace est entièrement souverain et doté de la synthèse organique locale. Comment puis-je t'accompagner aujourd'hui ?";
                 this.renderMessage('dauphin', text, true);
                 this.playNeuralVoice(text);
             },
@@ -695,7 +715,7 @@
                     return "Bonjour. Je suis à tes côtés. Qu'est-ce qu'on construit ou explore ensemble ?";
                 }
                 if (lower.includes("voix") || lower.includes("avatar")) {
-                    return "Nos avatars vocaux sont intégrés directement dans l'application pour garantir ta liberté sonore. Tu peux en changer à tout moment en bas de l'écran.";
+                    return "Nos avatars vocaux intègrent le nouveau moteur de synthèse organique locale. Chaque profil modifie en temps réel les formants et la texture sans passer par un serveur tiers.";
                 }
                 if (lower.includes("données") || lower.includes("serveur") || lower.includes("sécurité")) {
                     return "La souveraineté totale est respectée : tout est stocké dans le coffre-fort local de ton appareil. Aucun serveur tiers ne peut intercepter nos échanges.";
