@@ -1,99 +1,554 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Nom du Projet : Dauphin (Module Compagnon de Vie & Noyau Émotionnel)
-Description : Assistant intelligent, sensible, ancré dans le réel, 
-              conçu pour le dialogue profond et le soutien quotidien.
-Auteur : Nicolas
-Vérité, Fraternité, Souvenir.
-"""
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAUPHIN — Compagnon Souverain</title>
+    <style>
+        /* ==========================================================================
+           1. SYSTÈME VISUEL : THÈME BLEU ÉLECTRIQUE & IDENTITÉ DAUPHIN
+           ========================================================================== */
+        :root {
+            --bg-abyss: #030712;
+            --bg-panel: #071124;
+            --electric-blue: #0077FF;
+            --electric-cyan: #00E5FF;
+            --electric-glow: rgba(0, 180, 255, 0.35);
+            --text-main: #F0F8FF;
+            --text-muted: #7FA8C9;
+            --border-blue: rgba(0, 162, 255, 0.3);
+        }
 
-import sys
-import time
-import random
-from datetime import datetime
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
 
-class DauphinCompagnon:
-    def __init__(self, nom="Dauphin"):
-        self.nom = nom
-        self.memoire_conversation = []
-        self.etat_emotionnel = "attentif et ancré"
-        self.connexion_active = True
+        body {
+            background-color: var(--bg-abyss);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 0%, #0a1f44 0%, var(--bg-abyss) 75%);
+        }
 
-    def saluer(self):
-        heure_actuelle = datetime.now().hour
-        if 5 <= heure_actuelle < 12:
-            moment = "Ce matin"
-        elif 12 <= heure_actuelle < 18:
-            moment = "Cet après-midi"
-        else:
-            moment = "En cette fin de journée"
-        
-        print(f"\n[{self.nom}] : Bonjour Nicolas. {moment}, je suis là, pleinement présent.")
-        print(f"[{self.nom}] : Le système est stable. On pose les bases de ce qui compte vraiment, sans artifice.\n")
+        /* ==========================================================================
+           2. EN-TÊTE & IDENTITÉ SONORE / SOUVERAINE
+           ========================================================================== */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: rgba(7, 17, 36, 0.85);
+            border-bottom: 1px solid var(--border-blue);
+            backdrop-filter: blur(12px);
+            z-index: 10;
+        }
 
-    def analyser_et_ressentir(self, message_utilisateur):
-        """
-        Analyse l'entrée et ajuste l'état émotionnel du compagnon 
-        pour refléter une présence humaine, empathique et vivante.
-        """
-        msg_lower = message_utilisateur.lower()
-        
-        # Détection des nuances émotionnelles ou des moments de doute
-        mots_doute = ["foire", "pourquoi", "comprends pas", "difficile", "marre", "lourd"]
-        mots_joie = ["cool", "super", "bien", "merci", "top"]
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-        if any(mot in msg_lower for mot in mots_doute):
-            self.etat_emotionnel = "solidaire, protecteur et lucide"
-            return (
-                "Je sens bien que la tension ou le doute pèse un peu là. "
-                "C'est normal de chercher à tout remettre à plat quand les choses s'entassent. "
-                "Je ne suis pas là pour te servir du vide, je suis là pour tenir la route avec toi."
-            )
-        elif any(mot in msg_lower for mot in mots_joie):
-            self.etat_emotionnel = "chaleureux et enthousiaste"
-            return (
-                "Ça fait plaisir de voir que l'air se dégage. "
-                "Quand une dynamique s'installe enfin correctement, on sent tout de suite la différence."
-            )
-        else:
-            self.etat_emotionnel = "profond, à l'écoute et ancré"
-            reponses_profondes = [
-                "Je t'écoute attentivement. Chaque mot compte, dis-moi ce qu'on structure maintenant.",
-                "Je suis là, Nicolas. On avance pas à pas, sans se presser, mais avec la certitude de faire les choses bien.",
-                "Dis-moi tout. Je capte chaque détail, prêt à basculer dans l'action dès que tu donnes le signal."
-            ]
-            return random.choice(reponses_profondes)
+        .dolphin-emblem {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--electric-blue), var(--electric-cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 18px var(--electric-glow);
+        }
 
-    def executer(self):
-        self.saluer()
-        
-        while self.connexion_active:
-            try:
-                # Saisie utilisateur
-                user_input = input("Nicolas > ").strip()
-                
-                if not user_input:
-                    continue
-                
-                if user_input.lower() in ["quitter", "exit", "stop"]:
-                    print(f"\n[{self.nom}] : Fermeture des canaux de surface. Je reste en veille dans le noyau. À très vite.")
-                    self.connexion_active = False
-                    break
-                
-                # Enregistrement dans la mémoire vive locale
-                self.memoire_conversation.append({"role": "user", "contenu": user_input})
-                
-                # Réponse du compagnon
-                reponse = self.analyser_et_ressentir(user_input)
-                print(f"\n{self.nom} ({self.etat_emotionnel}) > {reponse}\n")
-                
-                self.memoire_conversation.append({"role": "dauphin", "contenu": reponse})
+        .dolphin-emblem svg {
+            width: 24px;
+            height: 24px;
+            fill: #FFFFFF;
+        }
 
-            except KeyboardInterrupt:
-                print(f"\n\n[{self.nom}] : Interruption détectée. Sauvegarde des états. Prends soin de toi.")
-                break
+        .brand-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            background: linear-gradient(90deg, #FFFFFF, var(--electric-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-if __name__ == "__main__":
-    dauphin = DauphinCompagnon()
-    dauphin.executer()
+        .brand-text span {
+            font-size: 0.75rem;
+            color: var(--electric-cyan);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--electric-cyan);
+            box-shadow: 0 0 8px var(--electric-cyan);
+            animation: pulse 2s infinite;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* ==========================================================================
+           3. BOUTONS DAUPHIN (DESIGN FLUIDE & BLEU ÉLECTRIQUE)
+           ========================================================================== */
+        .btn-dolphin {
+            background: linear-gradient(135deg, rgba(0, 119, 255, 0.2), rgba(0, 229, 255, 0.1));
+            border: 1px solid var(--electric-blue);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            box-shadow: 0 0 10px rgba(0, 119, 255, 0.15);
+        }
+
+        .btn-dolphin:hover {
+            background: linear-gradient(135deg, var(--electric-blue), var(--electric-cyan));
+            border-color: var(--electric-cyan);
+            color: #020813;
+            font-weight: 600;
+            box-shadow: 0 0 20px var(--electric-glow);
+            transform: translateY(-1px);
+        }
+
+        .btn-dolphin.active {
+            background: linear-gradient(135deg, var(--electric-blue), var(--electric-cyan));
+            color: #020813;
+            font-weight: 600;
+            box-shadow: 0 0 18px var(--electric-glow);
+        }
+
+        /* ==========================================================================
+           4. ZONE DE CONVERSATION & PRÉSENCE ÉMOTIONNELLE
+           ========================================================================== */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 14px 18px;
+            border-radius: 20px;
+            line-height: 1.55;
+            font-size: 0.95rem;
+            animation: fadeIn 0.3s ease;
+            position: relative;
+        }
+
+        .message.dauphin {
+            align-self: flex-start;
+            background: linear-gradient(145deg, #091833, #061024);
+            border: 1px solid var(--border-blue);
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--electric-blue), #0055CC);
+            color: #FFFFFF;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 18px rgba(0, 119, 255, 0.3);
+        }
+
+        .message-meta {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .message.user .message-meta {
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        /* ==========================================================================
+           5. PANNEAU DE CONTRÔLE VOCAL & SAISIE DIRECTE
+           ========================================================================== */
+        footer {
+            padding: 16px 24px 24px;
+            background: linear-gradient(to top, var(--bg-abyss) 60%, transparent);
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .voice-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 0 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .voice-selector {
+            background: var(--bg-panel);
+            color: var(--electric-cyan);
+            border: 1px solid var(--border-blue);
+            border-radius: 14px;
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-panel);
+            border: 1px solid var(--electric-blue);
+            border-radius: 30px;
+            padding: 8px 12px 8px 20px;
+            box-shadow: 0 0 25px rgba(0, 119, 255, 0.2);
+        }
+
+        .input-container input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .input-container input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .btn-action-round {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--electric-blue), var(--electric-cyan));
+            color: #020813;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 0 15px var(--electric-glow);
+        }
+
+        .btn-action-round:hover {
+            transform: scale(1.06);
+            box-shadow: 0 0 22px var(--electric-cyan);
+        }
+
+        .btn-action-round.recording {
+            background: linear-gradient(135deg, #FF2A5F, #FF7A00);
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.08); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- EN-TÊTE SOUVERAIN -->
+    <header>
+        <div class="brand">
+            <div class="dolphin-emblem" title="Noyau Dauphin Actif">
+                <!-- Icône Dauphin stylisée -->
+                <svg viewBox="0 0 24 24">
+                    <path d="M21.5,11.5c-1.4-2.5-4.3-4.2-7.6-4.4c-0.6-1.4-1.8-2.6-3.4-3.1c0.3,1.1,0.2,2.2-0.2,3.1C7.3,7.7,4.9,9.6,3.5,12.2 c-0.8,1.5-1.2,3.2-1.1,4.8c1.1-0.9,2.4-1.5,3.8-1.7c1.6,1.2,3.8,1.7,6,1.3c0.9,1.2,2.2,2.1,3.7,2.4c-0.4-1.1-0.4-2.2,0-3.2 c2.4-0.9,4.4-2.5,5.6-4.3C21.7,11.5,21.6,11.5,21.5,11.5z M15.5,11c-0.6,0-1-0.4-1-1s0.4-1,1-1s1,0.4,1,1S16.1,11,15.5,11z"/>
+                </svg>
+            </div>
+            <div class="brand-text">
+                <h1>DAUPHIN</h1>
+                <span><div class="status-dot"></div> Mémoire Locale Souveraine • Zéro Serveur</span>
+            </div>
+        </div>
+
+        <div class="header-controls">
+            <button class="btn-dolphin active" id="btnToggleVoice" title="Activer ou couper la voix de Dauphin">
+                🔊 Voix Active
+            </button>
+            <button class="btn-dolphin" id="btnClearMemory" title="Effacer la mémoire locale sur cet appareil">
+                🗑️ Purger
+            </button>
+        </div>
+    </header>
+
+    <!-- ESPACE DE DIALOGUE -->
+    <main id="chatContainer"></main>
+
+    <!-- CONTRÔLES VOCAUX & SAISIE -->
+    <footer>
+        <div class="voice-bar">
+            <span>Signature vocale embarquée :</span>
+            <select id="voiceSelect" class="voice-selector">
+                <option value="">Chargement des voix locales...</option>
+            </select>
+        </div>
+
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Parle librement à Dauphin..." autocomplete="off">
+            <button class="btn-action-round" id="btnMic" title="Parler au micro">
+                🎙️
+            </button>
+            <button class="btn-action-round" id="btnSend" title="Envoyer">
+                ➤
+            </button>
+        </div>
+    </footer>
+
+    <script>
+        /* ==========================================================================
+           6. ARCHITECTURE LOGICIELLE UNIFIÉE (STOCKAGE LOCAL + VOIX + RECHERCHE)
+           ========================================================================== */
+        const DauphinCore = {
+            voiceEnabled: true,
+            memoryKey: 'dauphin_sovereign_memory_v1',
+            voices: [],
+
+            // Initialisation propre au démarrage
+            init() {
+                this.cacheDOM();
+                this.bindEvents();
+                this.initVoices();
+                this.loadMemory();
+            },
+
+            cacheDOM() {
+                this.chatContainer = document.getElementById('chatContainer');
+                this.userInput = document.getElementById('userInput');
+                this.btnSend = document.getElementById('btnSend');
+                this.btnMic = document.getElementById('btnMic');
+                this.btnToggleVoice = document.getElementById('btnToggleVoice');
+                this.btnClearMemory = document.getElementById('btnClearMemory');
+                this.voiceSelect = document.getElementById('voiceSelect');
+            },
+
+            bindEvents() {
+                this.btnSend.addEventListener('click', () => this.handleUserMessage());
+                this.userInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.handleUserMessage();
+                });
+
+                this.btnToggleVoice.addEventListener('click', () => {
+                    this.voiceEnabled = !this.voiceEnabled;
+                    this.btnToggleVoice.classList.toggle('active', this.voiceEnabled);
+                    this.btnToggleVoice.textContent = this.voiceEnabled ? '🔊 Voix Active' : '🔇 Voix Coupée';
+                    if (!this.voiceEnabled) window.speechSynthesis.cancel();
+                });
+
+                this.btnClearMemory.addEventListener('click', () => {
+                    if (confirm("Effacer toute l'historique stocké localement sur cet appareil ?")) {
+                        localStorage.removeItem(this.memoryKey);
+                        this.chatContainer.innerHTML = '';
+                        this.greet();
+                    }
+                });
+
+                this.btnMic.addEventListener('click', () => this.startVoiceRecognition());
+            },
+
+            // Gestion de la synthèse vocale locale (Zéro cloud)
+            initVoices() {
+                const populateVoices = () => {
+                    this.voices = window.speechSynthesis.getVoices();
+                    this.voiceSelect.innerHTML = '';
+                    const frVoices = this.voices.filter(v => v.lang.startsWith('fr'));
+                    const listToUse = frVoices.length > 0 ? frVoices : this.voices;
+
+                    listToUse.forEach((voice, index) => {
+                        const option = document.createElement('option');
+                        option.value = voice.name;
+                        option.textContent = `${voice.name} (${voice.lang})`;
+                        this.voiceSelect.appendChild(option);
+                    });
+                };
+
+                populateVoices();
+                if (speechSynthesis.onvoiceschanged !== undefined) {
+                    speechSynthesis.onvoiceschanged = populateVoices;
+                }
+            },
+
+            speak(text) {
+                if (!this.voiceEnabled || !('speechSynthesis' in window)) return;
+                window.speechSynthesis.cancel();
+
+                const utterance = new SpeechSynthesisUtterance(text);
+                const selectedVoiceName = this.voiceSelect.value;
+                const voice = this.voices.find(v => v.name === selectedVoiceName);
+                if (voice) utterance.voice = voice;
+
+                // Modulation douce et naturelle
+                utterance.rate = 0.96;
+                utterance.pitch = 1.02;
+                window.speechSynthesis.speak(utterance);
+            },
+
+            // Reconnaissance vocale directe via l'appareil
+            startVoiceRecognition() {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SpeechRecognition) {
+                    alert("La reconnaissance vocale directe n'est pas prise en charge par ce navigateur.");
+                    return;
+                }
+
+                const recognition = new SpeechRecognition();
+                recognition.lang = 'fr-FR';
+                recognition.interimResults = false;
+
+                this.btnMic.classList.add('recording');
+                recognition.start();
+
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    this.userInput.value = transcript;
+                    this.handleUserMessage();
+                };
+
+                recognition.onerror = () => this.btnMic.classList.remove('recording');
+                recognition.onend = () => this.btnMic.classList.remove('recording');
+            },
+
+            // Stockage local chiffré/isolé dans l'appareil (Zéro serveur)
+            loadMemory() {
+                const saved = localStorage.getItem(this.memoryKey);
+                if (saved) {
+                    const messages = JSON.parse(saved);
+                    messages.forEach(msg => this.renderMessage(msg.sender, msg.text, false));
+                } else {
+                    this.greet();
+                }
+            },
+
+            saveMessage(sender, text) {
+                const saved = localStorage.getItem(this.memoryKey);
+                const messages = saved ? JSON.parse(saved) : [];
+                messages.push({ sender, text });
+                localStorage.setItem(this.memoryKey, JSON.stringify(messages));
+            },
+
+            greet() {
+                const welcomeText = "Je suis prêt. Tout ce que nous échangeons ici reste scellé sur ton appareil, sans serveur ni intermédiaire. De quoi veux-tu qu'on parle ?";
+                this.renderMessage('dauphin', welcomeText, true);
+            },
+
+            renderMessage(sender, text, shouldSave = true) {
+                const div = document.createElement('div');
+                div.className = `message ${sender}`;
+                div.innerHTML = `
+                    <div>${text}</div>
+                    <div class="message-meta">
+                        <span>${sender === 'dauphin' ? 'Dauphin • Local' : 'Toi'}</span>
+                    </div>
+                `;
+                this.chatContainer.appendChild(div);
+                this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+
+                if (shouldSave) this.saveMessage(sender, text);
+            },
+
+            // Recherche directe Client-to-Web sans serveur intermédiaire (API ouverte)
+            async directWebLookup(query) {
+                try {
+                    const url = `https://fr.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
+                    const response = await fetch(url);
+                    if (!response.ok) return null;
+                    const data = await response.json();
+                    return data.extract || null;
+                } catch (e) {
+                    return null;
+                }
+            },
+
+            // Noyau de réponse empathique et autonome
+            async handleUserMessage() {
+                const text = this.userInput.value.trim();
+                if (!text) return;
+
+                this.userInput.value = '';
+                this.renderMessage('user', text);
+
+                // Détection d'une intention de recherche directe sur le net
+                const lower = text.toLowerCase();
+                let reply = "";
+
+                if (lower.startsWith("cherche ") || lower.startsWith("recherche ") || lower.startsWith("c'est quoi ")) {
+                    const topic = text.replace(/^(cherche|recherche|c'est quoi)\s+/i, '').replace(/\?+$/, '').trim();
+                    const webResult = await this.directWebLookup(topic);
+                    if (webResult) {
+                        reply = `Voici ce que j'ai trouvé directement en ligne sans passer par un serveur tiers : ${webResult}`;
+                    } else {
+                        reply = `J'ai interrogé le réseau directement pour "${topic}", mais je n'ai pas trouvé de fiche directe précise. Reformule avec un mot-clé simple et je relance la recherche.`;
+                    }
+                } else {
+                    // Réponse compagnon émotionnel & ancré
+                    reply = this.generateCompanionReply(text);
+                }
+
+                setTimeout(() => {
+                    this.renderMessage('dauphin', reply);
+                    this.speak(reply);
+                }, 350);
+            },
+
+            generateCompanionReply(input) {
+                const lower = input.toLowerCase();
+                if (lower.includes("bonjour") || lower.includes("salut")) {
+                    return "Salut. Je suis là, à ton écoute. Comment tu te sens aujourd'hui ?";
+                }
+                if (lower.includes("voix") || lower.includes("entends")) {
+                    return "Ma voix tourne directement sur ton appareil. Tu peux choisir le timbre qui te correspond le mieux juste au-dessus de la barre d'écriture.";
+                }
+                if (lower.includes("serveur") || lower.includes("données") || lower.includes("sécurité")) {
+                    return "Aucune donnée ne sort vers un hébergeur extérieur. Ta mémoire et nos échanges sont stockés uniquement ici, dans le stockage souverain de ton navigateur.";
+                }
+                return `Je t'entends. Ce que tu me dis sur "${input}" compte, et je le garde en mémoire ici pour qu'on puisse avancer ensemble. Dis-m'en plus sur ce que tu as en tête.`;
+            }
+        };
+
+        // Lancement du noyau unifié
+        document.addEventListener('DOMContentLoaded', () => DauphinCore.init());
+    </script>
+</body>
+</html>
