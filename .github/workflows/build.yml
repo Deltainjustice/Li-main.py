@@ -1,50 +1,56 @@
-name: Compile Android APK
+name: Compiler APK Dauphin
 
 on:
   push:
-    branches: [ main, master ]
-  workflow_dispatch:
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-22.04
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Préparation de Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Install system dependencies
+      - name: Installation des dépendances système Linux
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            git \
-            zip \
-            unzip \
-            openjdk-17-jdk \
             python3-pip \
-            autoconf \
-            libtool \
-            pkg-config \
+            build-essential \
+            git \
+            python3-dev \
+            ffmpeg \
+            libsdl2-dev \
+            libsdl2-image-dev \
+            libsdl2-mixer-dev \
+            libsdl2-ttf-dev \
+            libportmidi-dev \
+            libswscale-dev \
+            libavformat-dev \
+            libavcodec-dev \
             zlib1g-dev \
-            libncurses5-dev \
-            libffi-dev \
-            libssl-dev
+            libunwind-dev \
+            openjdk-17-jdk
 
-      - name: Install Buildozer and Cython
+      - name: Configuration de Java 17
+        run: |
+          sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+
+      - name: Installation de Buildozer et Cython
         run: |
           pip install --upgrade pip
-          pip install cython==0.29.36 buildozer
+          pip install --upgrade cython==0.29.36 buildozer
 
-      - name: Build APK with Buildozer
-        run: buildozer android debug
+      - name: Lancement de la compilation Buildozer
+        run: |
+          buildozer -v android debug
 
-      - name: Upload APK
+      - name: Récupération de l'APK généré
         uses: actions/upload-artifact@v4
         with:
-          name: package-apk
+          name: dauphin-apk
           path: bin/*.apk
