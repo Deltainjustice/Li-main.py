@@ -1,0 +1,15 @@
+{
+  "name": "Dauphin",
+  "short_name": "Dauphin",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a1128",
+  "theme_color": "#0a1128",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/color/512/dolphin.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
