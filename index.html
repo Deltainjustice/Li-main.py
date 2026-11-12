@@ -1,306 +1,99 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dauphin - Universal Streaming Gateway</title>
-    <style>
-        :root {
-            --bg-deep: #050811;
-            --bg-card: #0f172a;
-            --bg-card-hover: #1e293b;
-            --accent: #38bdf8;
-            --accent-glow: rgba(56, 189, 248, 0.4);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #1e293b;
-        }
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Nom du Projet : Dauphin (Module Compagnon de Vie & Noyau Émotionnel)
+Description : Assistant intelligent, sensible, ancré dans le réel, 
+              conçu pour le dialogue profond et le soutien quotidien.
+Auteur : Nicolas
+Vérité, Fraternité, Souvenir.
+"""
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; user-select: none; }
-        body { background-color: var(--bg-deep); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+import sys
+import time
+import random
+from datetime import datetime
 
-        #intro-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000; z-index: 99999; display: flex; justify-content: center; align-items: center;
-            flex-direction: column; transition: opacity 1.2s ease; cursor: pointer;
-        }
-        .dolphin-3d-title { font-size: 3.5rem; font-weight: 900; color: var(--accent); text-shadow: 0 0 40px var(--accent-glow); letter-spacing: 4px; }
-        .dolphin-subtext { color: var(--text-muted); margin-top: 16px; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; text-align: center; }
+class DauphinCompagnon:
+    def __init__(self, nom="Dauphin"):
+        self.nom = nom
+        self.memoire_conversation = []
+        self.etat_emotionnel = "attentif et ancré"
+        self.connexion_active = True
+
+    def saluer(self):
+        heure_actuelle = datetime.now().hour
+        if 5 <= heure_actuelle < 12:
+            moment = "Ce matin"
+        elif 12 <= heure_actuelle < 18:
+            moment = "Cet après-midi"
+        else:
+            moment = "En cette fin de journée"
         
-        .curtain { position: absolute; top: 0; width: 50vw; height: 100%; background: linear-gradient(135deg, #090d19, #02040a); z-index: 100000; transition: transform 1.8s cubic-bezier(0.77, 0, 0.175, 1); }
-        .curtain.left { left: 0; transform-origin: left; border-right: 1px solid rgba(56, 189, 248, 0.2); }
-        .curtain.right { right: 0; transform-origin: right; border-left: 1px solid rgba(56, 189, 248, 0.2); }
-        .open-left { transform: translateX(-100%); }
-        .open-right { transform: translateX(100%); }
+        print(f"\n[{self.nom}] : Bonjour Nicolas. {moment}, je suis là, pleinement présent.")
+        print(f"[{self.nom}] : Le système est stable. On pose les bases de ce qui compte vraiment, sans artifice.\n")
 
-        header { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
-        .brand { font-size: 1.25rem; font-weight: 800; color: var(--accent); letter-spacing: 3px; display: flex; align-items: center; gap: 8px; }
-        .top-actions { display: flex; gap: 8px; }
-        .btn { background: #1e293b; color: var(--text-main); border: 1px solid var(--border); padding: 7px 14px; border-radius: 8px; font-weight: 600; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
-        .btn:hover { background: var(--accent); color: var(--bg-deep); }
+    def analyser_et_ressentir(self, message_utilisateur):
+        """
+        Analyse l'entrée et ajuste l'état émotionnel du compagnon 
+        pour refléter une présence humaine, empathique et vivante.
+        """
+        msg_lower = message_utilisateur.lower()
+        
+        # Détection des nuances émotionnelles ou des moments de doute
+        mots_doute = ["foire", "pourquoi", "comprends pas", "difficile", "marre", "lourd"]
+        mots_joie = ["cool", "super", "bien", "merci", "top"]
 
-        .workspace { flex: 1; display: flex; flex-direction: column; padding: 16px; gap: 16px; max-width: 1400px; margin: 0 auto; width: 100%; }
+        if any(mot in msg_lower for mot in mots_doute):
+            self.etat_emotionnel = "solidaire, protecteur et lucide"
+            return (
+                "Je sens bien que la tension ou le doute pèse un peu là. "
+                "C'est normal de chercher à tout remettre à plat quand les choses s'entassent. "
+                "Je ne suis pas là pour te servir du vide, je suis là pour tenir la route avec toi."
+            )
+        elif any(mot in msg_lower for mot in mots_joie):
+            self.etat_emotionnel = "chaleureux et enthousiaste"
+            return (
+                "Ça fait plaisir de voir que l'air se dégage. "
+                "Quand une dynamique s'installe enfin correctement, on sent tout de suite la différence."
+            )
+        else:
+            self.etat_emotionnel = "profond, à l'écoute et ancré"
+            reponses_profondes = [
+                "Je t'écoute attentivement. Chaque mot compte, dis-moi ce qu'on structure maintenant.",
+                "Je suis là, Nicolas. On avance pas à pas, sans se presser, mais avec la certitude de faire les choses bien.",
+                "Dis-moi tout. Je capte chaque détail, prêt à basculer dans l'action dès que tu donnes le signal."
+            ]
+            return random.choice(reponses_profondes)
 
-        .gateway-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
-        .gateway-scroll::-webkit-scrollbar { display: none; }
-        .gateway-chip { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; cursor: pointer; transition: all 0.2s; }
-        .gateway-chip.active { background: var(--accent); color: var(--bg-deep); border-color: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
+    def executer(self):
+        self.saluer()
+        
+        while self.connexion_active:
+            try:
+                # Saisie utilisateur
+                user_input = input("Nicolas > ").strip()
+                
+                if not user_input:
+                    continue
+                
+                if user_input.lower() in ["quitter", "exit", "stop"]:
+                    print(f"\n[{self.nom}] : Fermeture des canaux de surface. Je reste en veille dans le noyau. À très vite.")
+                    self.connexion_active = False
+                    break
+                
+                # Enregistrement dans la mémoire vive locale
+                self.memoire_conversation.append({"role": "user", "contenu": user_input})
+                
+                # Réponse du compagnon
+                reponse = self.analyser_et_ressentir(user_input)
+                print(f"\n{self.nom} ({self.etat_emotionnel}) > {reponse}\n")
+                
+                self.memoire_conversation.append({"role": "dauphin", "contenu": reponse})
 
-        .search-wrapper { position: relative; width: 100%; }
-        .search-input { width: 100%; padding: 14px 16px 14px 44px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main); font-size: 0.95rem; outline: none; }
-        .search-input:focus { border-color: var(--accent); }
-        .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+            except KeyboardInterrupt:
+                print(f"\n\n[{self.nom}] : Interruption détectée. Sauvegarde des états. Prends soin de toi.")
+                break
 
-        .catalog-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; max-height: 280px; overflow-y: auto; padding: 4px; }
-        .track-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 10px; cursor: pointer; transition: transform 0.2s, border-color 0.2s; display: flex; flex-direction: column; gap: 6px; }
-        .track-card:hover { transform: translateY(-3px); border-color: var(--accent); background: var(--bg-card-hover); }
-        .track-thumb { width: 100%; height: 95px; object-fit: cover; border-radius: 8px; background: #1e293b; }
-        .track-title { font-weight: 700; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .track-artist { color: var(--text-muted); font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .track-meta { display: flex; justify-content: space-between; align-items: center; margin-top: auto; font-size: 0.6rem; color: var(--accent); font-weight: 700; }
-
-        .dsp-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-        .dsp-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 700; color: var(--accent); }
-        .faders-grid-10 { display: flex; justify-content: space-between; height: 110px; align-items: flex-end; padding-top: 5px; gap: 4px; overflow-x: auto; }
-        .fader-group { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; min-width: 32px; }
-        .fader { writing-mode: bt-lr; -webkit-appearance: slider-vertical; width: 5px; height: 75px; background: #1e293b; outline: none; border-radius: 3px; cursor: pointer; }
-        .fader::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 6px var(--accent-glow); }
-        .fader-freq { font-size: 0.55rem; color: var(--text-muted); white-space: nowrap; }
-
-        .player-footer { background: rgba(15, 23, 42, 0.95); border-top: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; backdrop-filter: blur(12px); position: sticky; bottom: 0; z-index: 100; }
-        .player-track-info { display: flex; align-items: center; gap: 12px; }
-        .player-thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; }
-        .player-controls { display: flex; align-items: center; gap: 14px; }
-        .control-btn { background: none; border: none; color: var(--text-main); font-size: 1.1rem; cursor: pointer; transition: color 0.2s; }
-        .control-btn:hover, .control-btn.active { color: var(--accent); text-shadow: 0 0 8px var(--accent-glow); }
-        .play-main-btn { background: var(--accent); color: var(--bg-deep); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 0 12px var(--accent-glow); }
-    </style>
-</head>
-<body>
-
-    <div id="intro-overlay" onclick="initializeDauphinEngine()">
-        <div class="dolphin-3d-title">🐬 DAUPHIN</div>
-        <div class="dolphin-subtext">Passerelle Universelle Débridée • Aucune connexion requise</div>
-    </div>
-
-    <div class="curtain left" id="curtainLeft"></div>
-    <div class="curtain right" id="curtainRight"></div>
-
-    <header>
-        <div class="brand"><span>🐬</span> DAUPHIN GATEWAY</div>
-        <div class="top-actions">
-            <button class="btn" onclick="toggleFullscreen()">Plein Écran</button>
-        </div>
-    </header>
-
-    <div class="workspace">
-        <div class="gateway-scroll" id="gatewayBar">
-            <div class="gateway-chip active" onclick="setGateway('all', this)">🌐 Toutes Passerelles</div>
-            <div class="gateway-chip" onclick="setGateway('Deezer', this)">🟣 Deezer Direct</div>
-            <div class="gateway-chip" onclick="setGateway('Tidal', this)">💎 Tidal Master</div>
-            <div class="gateway-chip" onclick="setGateway('Amazon', this)">📦 Amazon Music</div>
-            <div class="gateway-chip" onclick="setGateway('Spotify', this)">🟢 Spotify Stream</div>
-            <div class="gateway-chip" onclick="setGateway('Qobuz', this)">🌍 Qobuz Studio</div>
-        </div>
-
-        <div class="search-wrapper">
-            <span class="search-icon">🔍</span>
-            <input type="text" class="search-input" id="searchInput" placeholder="Recherche globale parmi les catalogues complets..." oninput="filterCatalog(this.value)">
-        </div>
-
-        <div class="catalog-container" id="catalogGrid"></div>
-
-        <div class="dsp-panel">
-            <div class="dsp-header">
-                <span>Égaliseur Studio Professionnel 10 Bandes (DSP Actif)</span>
-                <span style="font-size: 0.70rem; color: var(--text-muted);" id="dspStatus">Accès Direct Sans Compte</span>
-            </div>
-            <div class="faders-grid-10" id="fadersGrid10"></div>
-        </div>
-    </div>
-
-    <div class="player-footer">
-        <div class="player-track-info">
-            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=150" class="player-thumb" id="playerThumb" alt="Cover">
-            <div>
-                <div style="font-weight: 700; font-size: 0.80rem;" id="playerTitle">Prêt à diffuser</div>
-                <div style="color: var(--text-muted); font-size: 0.70rem;" id="playerArtist">Flux Master Débridé</div>
-            </div>
-        </div>
-        <div class="player-controls">
-            <button class="control-btn" id="repeatBtn" onclick="toggleRepeat()" title="Répéter la chanson">🔁</button>
-            <button class="control-btn" id="tsunamiBtn" onclick="toggleTsunamiShuffle()" title="Aléatoire Raz-de-marée">🌊 Raz-de-marée</button>
-            <button class="control-btn" onclick="previousTrack()">⏮</button>
-            <button class="play-main-btn" id="mainPlayBtn" onclick="togglePlayState()">▶</button>
-            <button class="control-btn" onclick="nextTrack()">⏭</button>
-        </div>
-    </div>
-
-    <script>
-        let audioElement = new Audio();
-        let isPlaying = false;
-        let audioCtx = null;
-        let currentGateway = 'all';
-        let isRepeatActive = false;
-        let isTsunamiActive = false;
-        let currentTrackIndex = 0;
-
-        // Catalogue universel accessible sans authentification individuelle
-        const masterCatalog = [
-            { title: "Master of Puppets", artist: "Metallica", gateway: "Deezer", preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300" },
-            { title: "Sonne", artist: "Rammstein", gateway: "Tidal", preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", cover: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300" },
-            { title: "Blinding Lights", artist: "The Weeknd", gateway: "Amazon", preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300" },
-            { title: "Get Lucky", artist: "Daft Punk", gateway: "Spotify", preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300" },
-            { title: "Ghost Love Score", artist: "Nightwish", gateway: "Qobuz", preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3", cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300" },
-            { title: "Lose Yourself", artist: "Eminem", gateway: "Deezer", preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3", cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300" }
-        ];
-
-        let activeFilteredList = [...masterCatalog];
-        const frequencies = ['32Hz', '63Hz', '125Hz', '250Hz', '500Hz', '1kHz', '2kHz', '4kHz', '8kHz', '16kHz'];
-
-        function build10BandEQ() {
-            const container = document.getElementById('fadersGrid10');
-            container.innerHTML = frequencies.map((freq, idx) => `
-                <div class="fader-group">
-                    <input type="range" class="fader" min="-15" max="15" value="0" oninput="adjust10Band(${idx}, this.value)">
-                    <span class="fader-freq">${freq}</span>
-                </div>
-            `).join('');
-        }
-
-        function initializeDauphinEngine() {
-            try {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(3200, audioCtx.currentTime + 0.4);
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.0);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 1.0);
-            } catch(e) {}
-
-            document.getElementById('curtainLeft').classList.add('open-left');
-            document.getElementById('curtainRight').classList.add('open-right');
-            setTimeout(() => { document.getElementById('intro-overlay').style.display = 'none'; }, 1400);
-
-            build10BandEQ();
-            renderCatalog(masterCatalog);
-
-            audioElement.addEventListener('ended', () => {
-                if (isRepeatActive) {
-                    audioElement.play();
-                } else {
-                    nextTrack();
-                }
-            });
-        }
-
-        function setGateway(gatewayName, element) {
-            document.querySelectorAll('.gateway-chip').forEach(c => c.classList.remove('active'));
-            element.classList.add('active');
-            currentGateway = gatewayName;
-            filterCatalog(document.getElementById('searchInput').value);
-        }
-
-        function filterCatalog(query) {
-            const q = query.toLowerCase();
-            activeFilteredList = masterCatalog.filter(item => {
-                const matchesGateway = currentGateway === 'all' || item.gateway === currentGateway;
-                const matchesSearch = item.title.toLowerCase().includes(q) || item.artist.toLowerCase().includes(q) || item.gateway.toLowerCase().includes(q);
-                return matchesGateway && matchesSearch;
-            });
-            renderCatalog(activeFilteredList);
-        }
-
-        function renderCatalog(items) {
-            const grid = document.getElementById('catalogGrid');
-            if (items.length === 0) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 20px;">Aucun titre disponible sur cette passerelle.</div>`;
-                return;
-            }
-            grid.innerHTML = items.map((t, idx) => `
-                <div class="track-card" onclick="playTrackByIndex(${idx})">
-                    <img src="${t.cover}" class="track-thumb" alt="${t.title}">
-                    <div class="track-title">${t.title}</div>
-                    <div class="track-artist">${t.artist}</div>
-                    <div class="track-meta"><span>[${t.gateway}]</span><span>Flux Direct</span></div>
-                </div>
-            `).join('');
-        }
-
-        function playTrackByIndex(index) {
-            if (index < 0 || index >= activeFilteredList.length) return;
-            currentTrackIndex = index;
-            const t = activeFilteredList[index];
-
-            document.getElementById('playerTitle').innerText = t.title;
-            document.getElementById('playerArtist').innerText = `${t.artist} [Passerelle: ${t.gateway}]`;
-            document.getElementById('playerThumb').src = t.cover;
-
-            audioElement.src = t.preview;
-            audioElement.play().then(() => {
-                isPlaying = true;
-                document.getElementById('mainPlayBtn').innerText = '⏸';
-            }).catch(e => console.log("Prêt pour la lecture"));
-        }
-
-        function togglePlayState() {
-            if (!audioElement.src && activeFilteredList.length > 0) {
-                playTrackByIndex(0);
-                return;
-            }
-            if (isPlaying) {
-                audioElement.pause();
-                isPlaying = false;
-                document.getElementById('mainPlayBtn').innerText = '▶';
-            } else {
-                audioElement.play();
-                isPlaying = true;
-                document.getElementById('mainPlayBtn').innerText = '⏸';
-            }
-        }
-
-        function nextTrack() {
-            if (activeFilteredList.length === 0) return;
-            if (isTsunamiActive) {
-                currentTrackIndex = Math.floor(Math.random() * activeFilteredList.length);
-            } else {
-                currentTrackIndex = (currentTrackIndex + 1) % activeFilteredList.length;
-            }
-            playTrackByIndex(currentTrackIndex);
-        }
-
-        function previousTrack() {
-            if (activeFilteredList.length === 0) return;
-            currentTrackIndex = (currentTrackIndex - 1 + activeFilteredList.length) % activeFilteredList.length;
-            playTrackByIndex(currentTrackIndex);
-        }
-
-        function toggleRepeat() {
-            isRepeatActive = !isRepeatActive;
-            const btn = document.getElementById('repeatBtn');
-            btn.classList.toggle('active', isRepeatActive);
-        }
-
-        function toggleTsunamiShuffle() {
-            isTsunamiActive = !isTsunamiActive;
-            const btn = document.getElementById('tsunamiBtn');
-            btn.classList.toggle('active', isTsunamiActive);
-        }
-
-        function adjust10Band(bandIndex, value) {
-            document.getElementById('dspStatus').innerText = `Égaliseur DSP : ${frequencies[bandIndex]} (${value > 0 ? '+' : ''}${value}dB)`;
-        }
-
-        function toggleFullscreen() { 
-            if (!document.fullscreenElement) document.documentElement.requestFullscreen(); 
-            else document.exitFullscreen(); 
-        }
-    </script>
-</body>
-</html>
+if __name__ == "__main__":
+    dauphin = DauphinCompagnon()
+    dauphin.executer()
