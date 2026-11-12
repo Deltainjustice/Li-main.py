@@ -45,8 +45,10 @@ jobs:
           pip install --upgrade pip
           pip install --upgrade cython==0.29.36 buildozer
 
-      - name: Lancement de la compilation Buildozer
+      - name: Lancement de la compilation Buildozer optimisée
         run: |
+          # Forcer l'architecture unique arm64-v8a pour éviter le dépassement de mémoire
+          export P4A_ANDROID_ARCHS=arm64-v8a
           buildozer -v android debug
 
       - name: Récupération de l'APK généré
