@@ -5,23 +5,35 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+_  build:
     runs-on: ubuntu-22.04
-    container: kivy/buildozer:latest
-    env:
-      BUILDOZER_ALLOW_INSTALL_AS_ROOT: "1"
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configuration de Git Safe Directory
-        run: |
-          git config --global --add safe.directory /__w/Li-main.py/Li-main.py
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-      - name: Lancement de la compilation Buildozer
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config \
+            zlib1g-dev libncurses5-dev libncursesw5-dev libsdl2-dev libsdl2-image-dev \
+            libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev \
+            libavformat-dev libavcodec-dev libssl-dev
+
+      - name: Install Buildozer and Cython
+        run: |
+          pip install --upgrade pip
+          pip install Cython==0.30.11 buildozer
+
+      - name: Build with Buildozer
         run: |
           buildozer -v android debug
 
-      - name: Récupération de l'APK généré
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: dauphin-apk
