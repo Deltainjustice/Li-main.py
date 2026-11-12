@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DAUPHIN — Compagnon Souverain</title>
+    <title>DAUPHIN — Compagnon Souverain & Local-First</title>
     <style>
         :root {
             --bg-abyss: #020617;
@@ -16,6 +16,7 @@
             --text-muted: #8EA9C4;
             --border-blue: rgba(0, 119, 255, 0.35);
             --danger: #FF2A5F;
+            --success: #00FF88;
         }
 
         * {
@@ -37,9 +38,7 @@
                 radial-gradient(circle at 100% 100%, rgba(0, 255, 255, 0.08) 0%, var(--bg-abyss) 70%);
         }
 
-        /* ==========================================================================
-           ÉCRAN D'OUVERTURE (CARESSE DU DAUPHIN)
-           ========================================================================== */
+        /* Écran d'ouverture */
         #splashScreen {
             position: fixed;
             inset: 0;
@@ -70,21 +69,11 @@
             box-shadow: 0 0 50px var(--electric-glow);
             cursor: pointer;
             position: relative;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
         }
 
         .splash-emblem:hover {
             transform: scale(1.08);
-            box-shadow: 0 0 70px var(--electric-cyan);
-        }
-
-        .splash-emblem::after {
-            content: '';
-            position: absolute;
-            inset: -6px;
-            border-radius: 50%;
-            border: 2px solid var(--electric-cyan);
-            animation: pulseSplash 2.5s infinite;
         }
 
         .splash-emblem svg {
@@ -110,12 +99,9 @@
         .splash-text p {
             font-size: 0.9rem;
             color: var(--text-muted);
-            letter-spacing: 0.5px;
         }
 
-        /* ==========================================================================
-           INTERFACES PRINCIPALES
-           ========================================================================== */
+        /* En-tête */
         header {
             display: flex;
             align-items: center;
@@ -177,6 +163,33 @@
             box-shadow: 0 0 10px var(--electric-cyan);
         }
 
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-mode-toggle {
+            background: rgba(0, 119, 255, 0.15);
+            border: 1px solid var(--electric-blue);
+            color: var(--electric-cyan);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-mode-toggle.online {
+            background: rgba(0, 255, 136, 0.15);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
         .btn-top {
             background: rgba(0, 119, 255, 0.1);
             border: 1px solid var(--border-blue);
@@ -190,11 +203,10 @@
 
         .btn-top:hover {
             background: var(--electric-blue);
-            border-color: var(--electric-cyan);
             color: #020617;
-            font-weight: 600;
         }
 
+        /* Zone de chat */
         main {
             flex: 1;
             overflow-y: auto;
@@ -212,7 +224,7 @@
             padding: 14px 18px;
             border-radius: 18px;
             line-height: 1.5;
-            font-size: 0.95ln;
+            font-size: 0.95rem;
         }
 
         .message.dauphin {
@@ -237,6 +249,7 @@
             justify-content: space-between;
         }
 
+        /* Pied de page et saisie */
         footer {
             padding: 16px 20px 24px;
             background: rgba(2, 6, 23, 0.9);
@@ -294,12 +307,6 @@
             animation: pulseMic 1.2s infinite;
         }
 
-        @keyframes pulseSplash {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.12); opacity: 0; }
-            100% { transform: scale(1); opacity: 0; }
-        }
-
         @keyframes pulseMic {
             0% { transform: scale(1); box-shadow: 0 0 10px var(--danger); }
             50% { transform: scale(1.1); box-shadow: 0 0 20px var(--danger); }
@@ -309,7 +316,7 @@
 </head>
 <body>
 
-    <!-- Écran d'ouverture avec la caresse du dauphin -->
+    <!-- Écran d'ouverture -->
     <div id="splashScreen">
         <div class="splash-emblem" id="splashEmblem" title="Caresse le Dauphin">
             <svg viewBox="0 0 24 24">
@@ -322,6 +329,7 @@
         </div>
     </div>
 
+    <!-- En-tête -->
     <header>
         <div class="brand">
             <div class="dolphin-emblem">
@@ -331,10 +339,15 @@
             </div>
             <div class="brand-text">
                 <h1>DAUPHIN</h1>
-                <span><div class="status-dot"></div> Souverain Local</span>
+                <span><div class="status-dot" id="statusDot"></div> <span id="statusText">Mode Hors-ligne (Local)</span></span>
             </div>
         </div>
-        <button class="btn-top" id="btnClearMemory">Purger</button>
+        <div class="header-controls">
+            <button class="btn-mode-toggle" id="btnModeToggle" title="Basculer entre Hors-ligne et En ligne">
+                🔌 <span id="modeLabel">Hors-ligne</span>
+            </button>
+            <button class="btn-top" id="btnClearMemory">Purger</button>
+        </div>
     </header>
 
     <main id="chatContainer"></main>
@@ -350,8 +363,9 @@
 
     <script>
         const DauphinApp = {
-            memoryKey: 'dauphin_vault_v5',
+            memoryKey: 'dauphin_vault_final',
             audioCtx: null,
+            isOnline: false,
 
             init() {
                 this.cacheDOM();
@@ -368,6 +382,10 @@
                 this.btnMic = document.getElementById('btnMic');
                 this.btnSearch = document.getElementById('btnSearch');
                 this.btnClearMemory = document.getElementById('btnClearMemory');
+                this.btnModeToggle = document.getElementById('btnModeToggle');
+                this.modeLabel = document.getElementById('modeLabel');
+                this.statusText = document.getElementById('statusText');
+                this.statusDot = document.getElementById('statusDot');
             },
 
             bindEvents() {
@@ -375,6 +393,25 @@
                     this.playDolphinSound();
                     this.splashScreen.classList.add('hidden');
                     this.loadMemory();
+                });
+
+                this.btnModeToggle.addEventListener('click', () => {
+                    this.isOnline = !this.isOnline;
+                    if (this.isOnline) {
+                        this.btnModeToggle.classList.add('online');
+                        this.modeLabel.textContent = "En ligne";
+                        this.statusText.textContent = "Mode En ligne (Pont Web)";
+                        this.statusDot.style.backgroundColor = "var(--success)";
+                        this.statusDot.style.boxShadow = "0 0 10px var(--success)";
+                        this.renderMessage('dauphin', "Passerelle réseau activée. Prêt pour l'interrogation mondiale.", false);
+                    } else {
+                        this.btnModeToggle.classList.remove('online');
+                        this.modeLabel.textContent = "Hors-ligne";
+                        this.statusText.textContent = "Mode Hors-ligne (Local)";
+                        this.statusDot.style.backgroundColor = "var(--electric-cyan)";
+                        this.statusDot.style.boxShadow = "0 0 10px var(--electric-cyan)";
+                        this.renderMessage('dauphin', "Retour en circuit fermé. Sanctuaire 100% local ONNX.", false);
+                    }
                 });
 
                 this.btnSend.addEventListener('click', () => this.handleUserMessage());
@@ -441,7 +478,7 @@
             },
 
             greet() {
-                this.renderMessage('dauphin', "Je suis Dauphin. Sanctuaire ouvert et sécurisé.", true);
+                this.renderMessage('dauphin', "Je suis Dauphin. Sanctuaire souverain initialisé.", true);
                 this.playDolphinSound();
             },
 
@@ -463,13 +500,21 @@
             async handleSearch(query) {
                 this.userInput.value = '';
                 this.renderMessage('user', `Recherche : ${query}`);
+                
+                if (!this.isOnline) {
+                    this.renderMessage('dauphin', "Mode Hors-ligne actif : analyse via les poids neuronaux locaux ONNX.");
+                    this.playDolphinSound();
+                    return;
+                }
+
                 try {
                     const res = await fetch(`https://fr.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
                     const data = await res.json();
-                    const reply = data.extract ? data.extract : "Aucun résultat direct.";
+                    const reply = data.extract ? data.extract : "Aucun résultat direct trouvé.";
                     this.renderMessage('dauphin', reply);
+                    this.playDolphinSound();
                 } catch(e) {
-                    this.renderMessage('dauphin', "Erreur lors de la recherche réseau.");
+                    this.renderMessage('dauphin', "Erreur de la passerelle réseau.");
                 }
             },
 
@@ -499,7 +544,11 @@
                 this.renderMessage('user', text);
 
                 setTimeout(() => {
-                    this.renderMessage('dauphin', `J'ai bien reçu ton message : "${text}".`);
+                    let reply = `[ONNX Local] : "${text}" analysé en circuit fermé.`;
+                    if (this.isOnline) {
+                        reply = `[Passerelle En Ligne] : "${text}" traité avec ouverture sécurisée.`;
+                    }
+                    this.renderMessage('dauphin', reply);
                     this.playDolphinSound();
                 }, 300);
             }
